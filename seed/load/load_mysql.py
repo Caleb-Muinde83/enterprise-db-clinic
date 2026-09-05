@@ -36,13 +36,16 @@ def main():
         for table in TABLES_IN_ORDER:
             path = f"{args.data_dir}/{table}.csv"
             print(f"Loading {table} from {path} ...")
-            # metadata column in `events` holds JSON with commas — safe under CSV quoting,
-            # LOAD DATA respects ENCLOSED BY for that.
+            # ESCAPED BY '"' tells MySQL that a doubled quote ("") inside a quoted field
+            # is an escaped literal quote (standard CSV/RFC4180 style) rather than two
+            # separate characters — needed for the JSON in `events.metadata` to parse
+            # correctly. LINES TERMINATED BY '\r\n' matches Python csv.writer's default
+            # line ending; without it, a stray \r gets appended to each row's last field.
             cur.execute(f"""
                 LOAD DATA LOCAL INFILE '{path}'
                 INTO TABLE {table}
-                FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
-                LINES TERMINATED BY '\\n'
+                FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
+                LINES TERMINATED BY '\\r\\n'
                 IGNORE 1 LINES
             """)
             conn.commit()

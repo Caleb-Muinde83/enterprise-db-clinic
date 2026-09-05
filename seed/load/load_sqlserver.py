@@ -51,7 +51,8 @@ def main():
                     FORMAT = 'CSV',
                     FIRSTROW = 2,
                     FIELDTERMINATOR = ',',
-                    ROWTERMINATOR = '0x0a',
+                    ROWTERMINATOR = '0x0d0a',
+                    FIELDQUOTE = '"',
                     TABLOCK
                 )
             """)
