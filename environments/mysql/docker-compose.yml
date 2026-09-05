@@ -1,0 +1,34 @@
+services:
+  mysql_old:
+    image: mysql:5.7
+    container_name: clinic_mysql_old
+    environment:
+      MYSQL_ROOT_PASSWORD: clinic_root
+      MYSQL_USER: clinic
+      MYSQL_PASSWORD: clinic
+      MYSQL_DATABASE: clinic
+    ports:
+      - "3357:3306"
+    volumes:
+      - mysql_old_data:/var/lib/mysql
+    command: --local-infile=1  # needed for LOAD DATA INFILE bulk loading
+    # This is the engine used for Phases 0-4. Development happens here.
+
+  mysql_new:
+    image: mysql:8.0
+    container_name: clinic_mysql_new
+    environment:
+      MYSQL_ROOT_PASSWORD: clinic_root
+      MYSQL_USER: clinic
+      MYSQL_PASSWORD: clinic
+      MYSQL_DATABASE: clinic
+    ports:
+      - "3380:3306"
+    volumes:
+      - mysql_new_data:/var/lib/mysql
+    # Stays empty/unused until Phase 5 (version migration), which migrates
+    # mysql_old (carrying every prior fix) into this container.
+
+volumes:
+  mysql_old_data:
+  mysql_new_data:

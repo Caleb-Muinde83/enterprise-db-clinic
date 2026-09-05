@@ -1,0 +1,31 @@
+services:
+  postgres_old:
+    image: postgres:11
+    container_name: clinic_pg_old
+    environment:
+      POSTGRES_USER: clinic
+      POSTGRES_PASSWORD: clinic
+      POSTGRES_DB: clinic
+    ports:
+      - "5411:5432"
+    volumes:
+      - pg_old_data:/var/lib/postgresql/data
+    # This is the engine used for Phases 0-4. Development happens here.
+
+  postgres_new:
+    image: postgres:16
+    container_name: clinic_pg_new
+    environment:
+      POSTGRES_USER: clinic
+      POSTGRES_PASSWORD: clinic
+      POSTGRES_DB: clinic
+    ports:
+      - "5416:5432"
+    volumes:
+      - pg_new_data:/var/lib/postgresql/data
+    # Stays empty/unused until Phase 5 (version migration), which migrates
+    # postgres_old (carrying every prior fix) into this container.
+
+volumes:
+  pg_old_data:
+  pg_new_data:

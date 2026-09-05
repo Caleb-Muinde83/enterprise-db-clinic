@@ -1,0 +1,32 @@
+services:
+  sqlserver_old:
+    image: mcr.microsoft.com/mssql/server:2016-latest
+    container_name: clinic_mssql_old
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Clinic!2016"
+      MSSQL_PID: Developer
+    ports:
+      - "14330:1433"
+    volumes:
+      - mssql_old_data:/var/opt/mssql
+      - ../../data:/data   # mounts generated CSVs so BULK INSERT can read them server-side
+    # This is the engine used for Phases 0-4. Development happens here.
+
+  sqlserver_new:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: clinic_mssql_new
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Clinic!2022"
+      MSSQL_PID: Developer
+    ports:
+      - "14333:1433"
+    volumes:
+      - mssql_new_data:/var/opt/mssql
+    # Stays empty/unused until Phase 5 (version migration), which migrates
+    # sqlserver_old (carrying every prior fix) into this container.
+
+volumes:
+  mssql_old_data:
+  mssql_new_data:

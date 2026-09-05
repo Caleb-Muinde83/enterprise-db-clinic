@@ -1,0 +1,17 @@
+# Generated data — regenerate locally, never commit
+/data/*.csv
+/data/*.parquet
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Docker
+*.env
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
