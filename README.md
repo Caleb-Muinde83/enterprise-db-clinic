@@ -41,11 +41,12 @@ data/                generated CSVs (gitignored — regenerate locally, don't co
 ## Getting started (Phase 0)
 
 These commands run schema/load steps **through the container itself** — you don't need
-`psql`, `mysql`, or `sqlcmd` installed on your host machine.
+`psql`, `mysql`, or `sqlcmd` installed on your host machine. They also don't depend on
+`make`, since it isn't available by default in Git Bash on Windows.
 
 ```bash
 # 1. Bring up an engine's old-version container (example: Postgres)
-make up-postgres
+cd environments/postgres && docker compose up -d postgres_old && cd ../..
 
 # 2. Install generator dependencies
 cd seed && pip install -r requirements.txt && cd ..
@@ -53,16 +54,30 @@ cd seed && pip install -r requirements.txt && cd ..
 # 3. Generate seed data (small scale for local testing first)
 cd seed && python generate_data.py --scale small --out ../data && cd ..
 
-# 4. Apply schema (via docker exec — no local client needed)
-make apply-schema-postgres
+# 4. Apply schema via the container's own client (no local install needed)
+docker exec -i clinic_pg_old psql -U clinic -d clinic < seed/schema/postgres_schema.sql
 
 # 5. Bulk-load into the running container
 cd seed && python load/load_postgres.py --data-dir ../data --host localhost --port 5411 && cd ..
 ```
 
-Same pattern for MySQL (`make up-mysql`, `make apply-schema-mysql`, `load_mysql.py`) and
-SQL Server (`make up-sqlserver`, `make apply-schema-sqlserver`, `load_sqlserver.py`) —
-see the Makefile for the exact `docker exec` commands each one runs.
+Same pattern for the other two engines:
+
+```bash
+# MySQL
+cd environments/mysql && docker compose up -d mysql_old && cd ../..
+docker exec -i clinic_mysql_old mysql -u clinic -pclinic clinic < seed/schema/mysql_schema.sql
+cd seed && python load/load_mysql.py --data-dir ../data --host localhost --port 3357 && cd ..
+
+# SQL Server
+cd environments/sqlserver && docker compose up -d sqlserver_old && cd ../..
+docker exec -i clinic_mssql_old /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Clinic!2016' < seed/schema/sqlserver_schema.sql
+# load_sqlserver.py needs the CSV path as seen INSIDE the container (see its docstring)
+```
+
+If you have `make` available (macOS/Linux, or Windows with it installed separately), the
+`Makefile` wraps the container-up and schema-apply steps as shortcuts — but it's optional,
+not required.
 
 See `seed/generate_data.py --help` for scale options (`small` / `medium` / `full`).
 `full` targets the ~10-20M row scale — expect it to take a while and to need real disk space.
