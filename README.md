@@ -46,7 +46,9 @@ These commands run schema/load steps **through the container itself** — you do
 
 ```bash
 # 1. Bring up an engine's old-version container (example: Postgres)
-cd environments/postgres && docker compose up -d postgres_old && cd ../..
+# --wait blocks until the healthcheck passes, not just until the container exists —
+# important for MySQL and SQL Server, whose first-ever startup takes 20-40s.
+cd environments/postgres && docker compose up -d --wait postgres_old && cd ../..
 
 # 2. Install generator dependencies
 cd seed && pip install -r requirements.txt && cd ..
@@ -65,12 +67,12 @@ Same pattern for the other two engines:
 
 ```bash
 # MySQL
-cd environments/mysql && docker compose up -d mysql_old && cd ../..
+cd environments/mysql && docker compose up -d --wait mysql_old && cd ../..
 docker exec -i clinic_mysql_old mysql -u clinic -pclinic clinic < seed/schema/mysql_schema.sql
 cd seed && python load/load_mysql.py --data-dir ../data --host localhost --port 3357 && cd ..
 
 # SQL Server
-cd environments/sqlserver && docker compose up -d sqlserver_old && cd ../..
+cd environments/sqlserver && docker compose up -d --wait sqlserver_old && cd ../..
 docker exec -i clinic_mssql_old /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Clinic!2016' < seed/schema/sqlserver_schema.sql
 # load_sqlserver.py needs the CSV path as seen INSIDE the container (see its docstring)
 ```

@@ -2,13 +2,13 @@
         apply-schema-postgres apply-schema-mysql apply-schema-sqlserver
 
 up-postgres:
-	cd environments/postgres && docker compose up -d postgres_old
+	cd environments/postgres && docker compose up -d --wait postgres_old
 
 up-mysql:
-	cd environments/mysql && docker compose up -d mysql_old
+	cd environments/mysql && docker compose up -d --wait mysql_old
 
 up-sqlserver:
-	cd environments/sqlserver && docker compose up -d sqlserver_old
+	cd environments/sqlserver && docker compose up -d --wait sqlserver_old
 
 down-all:
 	cd environments/postgres && docker compose down

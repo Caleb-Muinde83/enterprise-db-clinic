@@ -12,6 +12,12 @@ services:
     volumes:
       - mysql_old_data:/var/lib/mysql
     command: --local-infile=1  # needed for LOAD DATA INFILE bulk loading
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "clinic", "-pclinic"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 60s   # MySQL 5.7's first-ever startup restarts once during init
     # This is the engine used for Phases 0-4. Development happens here.
 
   mysql_new:
