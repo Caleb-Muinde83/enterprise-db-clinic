@@ -1,10 +1,10 @@
 services:
   sqlserver_old:
-    image: mcr.microsoft.com/mssql/server:2016-latest
+    image: mcr.microsoft.com/mssql/server:2017-latest
     container_name: clinic_mssql_old
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "Clinic!2016"
+      SA_PASSWORD: "Clinic!2017"
       MSSQL_PID: Developer
     ports:
       - "14330:1433"

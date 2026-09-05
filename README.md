@@ -73,7 +73,7 @@ cd seed && python load/load_mysql.py --data-dir ../data --host localhost --port 
 
 # SQL Server
 cd environments/sqlserver && docker compose up -d --wait sqlserver_old && cd ../..
-docker exec -i clinic_mssql_old /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Clinic!2016' < seed/schema/sqlserver_schema.sql
+docker exec -i clinic_mssql_old /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Clinic!2017' < seed/schema/sqlserver_schema.sql
 # load_sqlserver.py needs the CSV path as seen INSIDE the container (see its docstring)
 ```
 

@@ -12,7 +12,7 @@ Assumes schema/sqlserver_schema.sql has already been applied.
 
 Usage:
     python load_sqlserver.py --container-data-dir /data --host localhost --port 14330 \
-        --user sa --password 'Clinic!2016' --dbname clinic
+        --user sa --password 'Clinic!2017' --dbname clinic
 """
 
 import argparse

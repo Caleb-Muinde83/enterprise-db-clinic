@@ -1,4 +1,4 @@
--- Clean baseline schema — SQL Server 2016
+-- Clean baseline schema — SQL Server 2017
 -- No partitioning, no extra indexes beyond primary keys: this is the
 -- "inherited system" starting state before any module's fix is applied.
 
