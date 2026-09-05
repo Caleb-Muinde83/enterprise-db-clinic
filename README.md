@@ -40,20 +40,29 @@ data/                generated CSVs (gitignored — regenerate locally, don't co
 
 ## Getting started (Phase 0)
 
+These commands run schema/load steps **through the container itself** — you don't need
+`psql`, `mysql`, or `sqlcmd` installed on your host machine.
+
 ```bash
 # 1. Bring up an engine's old-version container (example: Postgres)
-cd environments/postgres && docker compose up -d postgres_old
+make up-postgres
 
 # 2. Install generator dependencies
-cd ../../seed && pip install -r requirements.txt
+cd seed && pip install -r requirements.txt && cd ..
 
 # 3. Generate seed data (small scale for local testing first)
-python generate_data.py --scale small --out ../data
+cd seed && python generate_data.py --scale small --out ../data && cd ..
 
-# 4. Apply schema + bulk-load into the running container
-psql -h localhost -p 5411 -U clinic -d clinic -f schema/postgres_schema.sql
-python load/load_postgres.py --data-dir ../data --host localhost --port 5411
+# 4. Apply schema (via docker exec — no local client needed)
+make apply-schema-postgres
+
+# 5. Bulk-load into the running container
+cd seed && python load/load_postgres.py --data-dir ../data --host localhost --port 5411 && cd ..
 ```
+
+Same pattern for MySQL (`make up-mysql`, `make apply-schema-mysql`, `load_mysql.py`) and
+SQL Server (`make up-sqlserver`, `make apply-schema-sqlserver`, `load_sqlserver.py`) —
+see the Makefile for the exact `docker exec` commands each one runs.
 
 See `seed/generate_data.py --help` for scale options (`small` / `medium` / `full`).
 `full` targets the ~10-20M row scale — expect it to take a while and to need real disk space.
