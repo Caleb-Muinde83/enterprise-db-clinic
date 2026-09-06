@@ -8,6 +8,14 @@ IF DB_ID('clinic') IS NULL
     CREATE DATABASE clinic;
 GO
 
+-- New databases inherit FULL recovery model, which fully logs every row of a large
+-- BULK INSERT (even with TABLOCK) — this is what filled the transaction log and
+-- crashed the load at full scale (15M events). SIMPLE recovery model enables
+-- minimal logging for bulk operations instead. Not appropriate for a real production
+-- system needing point-in-time recovery, but exactly right for a local learning lab.
+ALTER DATABASE clinic SET RECOVERY SIMPLE;
+GO
+
 USE clinic;
 GO
 
