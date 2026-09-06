@@ -11,8 +11,8 @@ Full curriculum and module specs: [`docs/curriculum.md`](docs/curriculum.md)
 
 | Phase | Module | Status |
 |---|---|---|
-| 0 | Foundation — dataset + environments | 🚧 in progress |
-| 1 | Unpartitioned tables at scale | ⏳ not started |
+| 0 | Foundation — dataset + environments | ✅ complete |
+| 1 | [Unpartitioned tables at scale](phase1_partitioning/README.md) | 🚧 in progress |
 | 2 | Missing / incorrect indexing | ⏳ not started |
 | 3 | Schema drift / normalization debt | ⏳ not started |
 | 4 | Zero-downtime migration (all 3 engines) | ⏳ not started |
