@@ -23,7 +23,7 @@ apply-schema-mysql:
 	docker exec -i clinic_mysql_old mysql -u clinic -pclinic clinic < seed/schema/mysql_schema.sql
 
 apply-schema-sqlserver:
-	docker exec -i clinic_mssql_old /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Clinic!2017' < seed/schema/sqlserver_schema.sql
+	MSYS_NO_PATHCONV=1 docker exec -i clinic_mssql_old /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Clinic!2017' < seed/schema/sqlserver_schema.sql
 
 seed-small:
 	cd seed && python generate_data.py --scale small --out ../data

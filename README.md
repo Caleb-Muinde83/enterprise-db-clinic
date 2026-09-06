@@ -73,8 +73,10 @@ cd seed && python load/load_mysql.py --data-dir ../data --host localhost --port 
 
 # SQL Server
 cd environments/sqlserver && docker compose up -d --wait sqlserver_old && cd ../..
-docker exec -i clinic_mssql_old /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Clinic!2017' < seed/schema/sqlserver_schema.sql
-# load_sqlserver.py needs the CSV path as seen INSIDE the container (see its docstring)
+# MSYS_NO_PATHCONV=1 stops Git Bash on Windows from mangling the /opt/... path below —
+# harmless to include on macOS/Linux too.
+MSYS_NO_PATHCONV=1 docker exec -i clinic_mssql_old /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Clinic!2017' < seed/schema/sqlserver_schema.sql
+cd seed && python load/load_sqlserver.py --container-data-dir /data --password 'Clinic!2017' && cd ..
 ```
 
 If you have `make` available (macOS/Linux, or Windows with it installed separately), the
