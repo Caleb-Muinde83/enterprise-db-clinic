@@ -12,7 +12,7 @@ Full curriculum and module specs: [`docs/curriculum.md`](docs/curriculum.md)
 | Phase | Module | Status |
 |---|---|---|
 | 0 | Foundation — dataset + environments | ✅ complete |
-| 1 | [Unpartitioned tables at scale](phase1_partitioning/README.md) | 🚧 in progress |
+| 1 | [Unpartitioned tables at scale](partitioning/README.md) | 🚧 in progress |
 | 2 | Missing / incorrect indexing | ⏳ not started |
 | 3 | Schema drift / normalization debt | ⏳ not started |
 | 4 | Zero-downtime migration (all 3 engines) | ⏳ not started |
@@ -33,7 +33,7 @@ problems center on. Target scale: ~10-20M rows in `events`.
 ```
 environments/       docker-compose files per engine (old-version + new-version containers)
 seed/                dataset generator + per-engine schema DDL + bulk-load scripts
-corruption/          scripts that deliberately re-introduce each module's problem (Phase 1+)
+corruption/          scripts that deliberately re-introduce each module's problem
 docs/                curriculum spec and per-phase write-ups
 data/                generated CSVs (gitignored — regenerate locally, don't commit)
 ```

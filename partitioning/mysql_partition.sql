@@ -1,4 +1,4 @@
--- Phase 1: partition `events` by month — MySQL
+-- Partitioning: partition `events` by month — MySQL
 -- IMPORTANT: InnoDB partitioned tables cannot have foreign keys in either direction
 -- (dev.mysql.com/doc/refman/5.7/en/partitioning-limitations-storage-engines.html).
 -- events.customer_id's FK must be dropped — referential integrity for this table

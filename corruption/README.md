@@ -4,7 +4,7 @@ This directory will hold the scripts that deliberately re-introduce each module'
 problem into the clean seeded schema, so every phase starts from a reproducible
 broken state rather than one created by hand.
 
-Populated starting with Phase 1 (unpartitioned tables at scale):
+Populated starting with the partitioning module (unpartitioned tables at scale):
 - `strip_partitioning.sql` (per engine)
 
 Then Phase 2 (indexing):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 generate_partition_ddl.py — Produces the three per-engine partition migration scripts
-for Phase 1 (unpartitioned tables at scale).
+for the partitioning module (unpartitioned tables at scale).
 
 Monthly partition boundaries are derived from the SAME date range used by
 seed/generate_data.py (3 years ending 2026-09-01), so the partitions actually line up
@@ -51,7 +51,7 @@ def month_boundaries():
 
 def generate_postgres(boundaries):
     parts = []
-    parts.append("""-- Phase 1: partition `events` by month — PostgreSQL
+    parts.append("""-- Partitioning: partition `events` by month — PostgreSQL
 -- PG11 supports a foreign key FROM a partitioned table TO a regular table, so
 -- events.customer_id's FK is preserved. The PK must include the partition key
 -- (event_time), so it becomes composite: (event_id, event_time).
@@ -102,7 +102,7 @@ COMMIT;
 
 def generate_mysql(boundaries):
     parts = []
-    parts.append("""-- Phase 1: partition `events` by month — MySQL
+    parts.append("""-- Partitioning: partition `events` by month — MySQL
 -- IMPORTANT: InnoDB partitioned tables cannot have foreign keys in either direction
 -- (dev.mysql.com/doc/refman/5.7/en/partitioning-limitations-storage-engines.html).
 -- events.customer_id's FK must be dropped — referential integrity for this table
@@ -135,7 +135,7 @@ ALTER TABLE events PARTITION BY RANGE (TO_DAYS(event_time)) (
 
 def generate_sqlserver(boundaries):
     parts = []
-    parts.append("""-- Phase 1: partition `events` by month — SQL Server
+    parts.append("""-- Partitioning: partition `events` by month — SQL Server
 -- No FK/partitioning restriction here (unlike MySQL), so events.customer_id's FK
 -- is preserved. PK must include the partition key, so it becomes composite
 -- (event_id, event_time), same as the other two engines.

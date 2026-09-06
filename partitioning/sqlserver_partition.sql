@@ -1,4 +1,4 @@
--- Phase 1: partition `events` by month — SQL Server
+-- Partitioning: partition `events` by month — SQL Server
 -- No FK/partitioning restriction here (unlike MySQL), so events.customer_id's FK
 -- is preserved. PK must include the partition key, so it becomes composite
 -- (event_id, event_time), same as the other two engines.

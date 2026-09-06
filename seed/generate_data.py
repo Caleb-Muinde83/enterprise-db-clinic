@@ -8,7 +8,7 @@ Produces CSVs for: customers, products, orders, order_items, payments, events.
 Design choices (deliberate, not arbitrary):
   - Customer activity is skewed (Zipf-like), not uniform — a small fraction of customers
     account for a large fraction of orders/events, matching real traffic patterns.
-  - event_time spans multiple years so time-based partitioning (Phase 1) is meaningful.
+  - event_time spans multiple years so time-based partitioning is meaningful.
   - Status/category fields use a small fixed cardinality (4-6 values), not high-cardinality
     noise, so indexing decisions (Phase 2) have a realistic selectivity profile to reason about.
   - Written straight to CSV rather than inserted row-by-row over a DB connection, since

@@ -1,4 +1,4 @@
-# Phase 1 — Unpartitioned Tables at Scale
+# Unpartitioned Tables at Scale
 
 Goal: diagnose and fix a large, unpartitioned, time-ordered `events` table causing
 slow scans and expensive maintenance — then prove the fix with real before/after
@@ -40,7 +40,7 @@ at `full` (~15M events) first:
 ```bash
 cd ../seed
 python generate_data.py --scale full --out ../data
-cd ../phase1_partitioning
+cd ../partitioning
 ```
 
 Then reload all three engines with the new data (drop and recreate first — see

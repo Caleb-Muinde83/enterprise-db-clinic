@@ -1,4 +1,4 @@
--- Phase 1: partition `events` by month — PostgreSQL
+-- Partitioning: partition `events` by month — PostgreSQL
 -- PG11 supports a foreign key FROM a partitioned table TO a regular table, so
 -- events.customer_id's FK is preserved. The PK must include the partition key
 -- (event_time), so it becomes composite: (event_id, event_time).
