@@ -2,6 +2,15 @@
 -- No partitioning, no extra indexes beyond primary keys: this is the
 -- "inherited system" starting state before any module's fix is applied.
 
+-- SQL Server's Docker image has no equivalent of Postgres'/MySQL's auto-created
+-- database env var, so create it explicitly and switch context to it.
+IF DB_ID('clinic') IS NULL
+    CREATE DATABASE clinic;
+GO
+
+USE clinic;
+GO
+
 IF OBJECT_ID('dbo.events', 'U') IS NOT NULL DROP TABLE dbo.events;
 IF OBJECT_ID('dbo.payments', 'U') IS NOT NULL DROP TABLE dbo.payments;
 IF OBJECT_ID('dbo.order_items', 'U') IS NOT NULL DROP TABLE dbo.order_items;

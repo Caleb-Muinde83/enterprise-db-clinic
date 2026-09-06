@@ -76,8 +76,11 @@ cd environments/sqlserver && docker compose up -d --wait sqlserver_old && cd ../
 # MSYS_NO_PATHCONV=1 stops Git Bash on Windows from mangling the /opt/... path below —
 # harmless to include on macOS/Linux too.
 MSYS_NO_PATHCONV=1 docker exec -i clinic_mssql_old /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Clinic!2017' < seed/schema/sqlserver_schema.sql
-cd seed && python load/load_sqlserver.py --container-data-dir /data --password 'Clinic!2017' && cd ..
+cd seed && python load/load_sqlserver.py --password 'Clinic!2017' && cd ..
 ```
+(Don't pass `--container-data-dir` explicitly on Git Bash — typing a leading-slash path
+directly at the prompt triggers the same MSYS mangling as before. The script already
+defaults to `/data`, which matches the docker-compose volume mount.)
 
 If you have `make` available (macOS/Linux, or Windows with it installed separately), the
 `Makefile` wraps the container-up and schema-apply steps as shortcuts — but it's optional,

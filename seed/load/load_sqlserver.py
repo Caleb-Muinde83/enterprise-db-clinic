@@ -15,7 +15,10 @@ data/ directory to /data inside the container — --container-data-dir should ma
 mount point (default: /data).
 
 Usage:
-    python load_sqlserver.py --container-data-dir /data --password 'Clinic!2017'
+    python load_sqlserver.py --password 'Clinic!2017'
+    # Don't pass --container-data-dir explicitly on Git Bash/Windows — typing a
+    # leading-slash path directly at the prompt gets mangled by MSYS path conversion.
+    # The default (/data) already matches the docker-compose volume mount.
 """
 
 import argparse
@@ -45,7 +48,9 @@ WITH (
     TABLOCK
 );
 GO
-PRINT '{table}: ' + CAST((SELECT COUNT(*) FROM {table}) AS VARCHAR(20)) + ' rows';
+DECLARE @cnt_{table} INT;
+SELECT @cnt_{table} = COUNT(*) FROM {table};
+PRINT '{table}: ' + CAST(@cnt_{table} AS VARCHAR(20)) + ' rows';
 GO
 """)
     return "\n".join(statements)
