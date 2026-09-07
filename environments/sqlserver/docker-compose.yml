@@ -17,7 +17,7 @@ services:
       timeout: 5s
       retries: 15
       start_period: 30s
-    # This is the engine used for Phases 0-4. Development happens here.
+    # Development happens here for every module up through zero-downtime migration.
 
   sqlserver_new:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -30,7 +30,7 @@ services:
       - "14333:1433"
     volumes:
       - mssql_new_data:/var/opt/mssql
-    # Stays empty/unused until Phase 5 (version migration), which migrates
+    # Stays empty/unused until the version-migration module, which migrates
     # sqlserver_old (carrying every prior fix) into this container.
 
 volumes:

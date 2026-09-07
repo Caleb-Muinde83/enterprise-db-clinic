@@ -11,14 +11,20 @@ services:
       - "3357:3306"
     volumes:
       - mysql_old_data:/var/lib/mysql
-    command: --local-infile=1  # needed for LOAD DATA INFILE bulk loading
+    command: --local-infile=1 --innodb-buffer-pool-size=1G
+      # local-infile: needed for LOAD DATA INFILE bulk loading
+      # innodb-buffer-pool-size: default is 128MB, badly undersized for 15M-row
+      # tables — caused a partitioning ALTER TABLE to stall for 7+ hours under
+      # constant disk I/O pressure instead of completing in minutes. 1GB is a
+      # reasonable floor for this dataset size; bump higher if your machine has
+      # the RAM to spare and things are still slow.
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "clinic", "-pclinic"]
       interval: 5s
       timeout: 5s
       retries: 20
       start_period: 60s   # MySQL 5.7's first-ever startup restarts once during init
-    # This is the engine used for Phases 0-4. Development happens here.
+    # Development happens here for every module up through zero-downtime migration.
 
   mysql_new:
     image: mysql:8.0
@@ -32,7 +38,7 @@ services:
       - "3380:3306"
     volumes:
       - mysql_new_data:/var/lib/mysql
-    # Stays empty/unused until Phase 5 (version migration), which migrates
+    # Stays empty/unused until the version-migration module, which migrates
     # mysql_old (carrying every prior fix) into this container.
 
 volumes:

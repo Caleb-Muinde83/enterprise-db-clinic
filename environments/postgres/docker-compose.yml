@@ -15,7 +15,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    # This is the engine used for Phases 0-4. Development happens here.
+    # Development happens here for every module up through zero-downtime migration.
 
   postgres_new:
     image: postgres:16
@@ -28,7 +28,7 @@ services:
       - "5416:5432"
     volumes:
       - pg_new_data:/var/lib/postgresql/data
-    # Stays empty/unused until Phase 5 (version migration), which migrates
+    # Stays empty/unused until the version-migration module, which migrates
     # postgres_old (carrying every prior fix) into this container.
 
 volumes:
