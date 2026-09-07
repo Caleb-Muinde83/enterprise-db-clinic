@@ -110,25 +110,65 @@ def generate_mysql(boundaries):
 -- query instead of the database. This is a real, unavoidable trade-off of
 -- partitioning a child table in MySQL, not a simplification for this exercise.
 --
--- If the constraint name below doesn't match your instance, look it up first:
---   SELECT CONSTRAINT_NAME FROM information_schema.TABLE_CONSTRAINTS
---   WHERE TABLE_NAME='events' AND CONSTRAINT_TYPE='FOREIGN KEY';
+-- Each step below checks current state before acting, rather than assuming a
+-- fresh start. MySQL DDL auto-commits per statement and doesn't participate in
+-- transactions, so an interrupted run (killed query, crash, etc.) can leave
+-- some steps already applied — a naive re-run from the top would fail trying to
+-- redo them. Safe to re-run this whole script at any point, from any partial state.
 
-ALTER TABLE events DROP FOREIGN KEY events_ibfk_1;
+-- Step 1: drop the FK, if it still exists.
+SET @fk_name = (
+    SELECT CONSTRAINT_NAME FROM information_schema.TABLE_CONSTRAINTS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'events'
+      AND CONSTRAINT_TYPE = 'FOREIGN KEY' LIMIT 1
+);
+SET @sql = IF(@fk_name IS NOT NULL,
+    CONCAT('ALTER TABLE events DROP FOREIGN KEY ', @fk_name),
+    'SELECT "FK already dropped, skipping" AS status');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
--- PK must include the partitioning column (event_time), so it becomes composite.
-ALTER TABLE events DROP PRIMARY KEY, ADD PRIMARY KEY (event_id, event_time);
+-- Step 2: make the PK composite (event_id, event_time), if it isn't already.
+-- PK must include the partitioning column for MySQL to allow partitioning at all.
+SET @pk_has_time = (
+    SELECT COUNT(*) FROM information_schema.KEY_COLUMN_USAGE
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'events'
+      AND CONSTRAINT_NAME = 'PRIMARY' AND COLUMN_NAME = 'event_time'
+);
+SET @sql = IF(@pk_has_time = 0,
+    'ALTER TABLE events DROP PRIMARY KEY, ADD PRIMARY KEY (event_id, event_time)',
+    'SELECT "PK already composite, skipping" AS status');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
-ALTER TABLE events PARTITION BY RANGE (TO_DAYS(event_time)) (
+-- Step 3: apply partitioning, if the table isn't already partitioned.
+SET @already_partitioned = (
+    SELECT COUNT(*) FROM information_schema.PARTITIONS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'events'
+      AND PARTITION_NAME IS NOT NULL
+);
+SET @sql = IF(@already_partitioned = 0,
 """)
 
     partition_lines = []
     for i in range(len(boundaries) - 1):
         hi = boundaries[i + 1].strftime("%Y-%m-%d")
         name = f"p{boundaries[i].year}{boundaries[i].month:02d}"
-        partition_lines.append(f"    PARTITION {name} VALUES LESS THAN (TO_DAYS('{hi}'))")
+        # ''{hi}'' (doubled quotes) because this whole clause is itself embedded
+        # inside another single-quoted string for the dynamic SQL PREPARE/EXECUTE
+        # below — a single unescaped quote here would terminate that outer string early.
+        partition_lines.append(f"    PARTITION {name} VALUES LESS THAN (TO_DAYS(''{hi}''))")
     partition_lines.append("    PARTITION pmax VALUES LESS THAN MAXVALUE")
-    parts.append(",\n".join(partition_lines) + "\n);")
+    partition_clause = ",\\n".join(partition_lines)
+
+    parts.append(f"""    'ALTER TABLE events PARTITION BY RANGE (TO_DAYS(event_time)) (\\n{partition_clause}\\n)',
+    'SELECT "Already partitioned, skipping" AS status');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+""")
 
     return "\n".join(parts)
 
