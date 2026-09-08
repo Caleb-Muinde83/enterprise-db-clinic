@@ -1,0 +1,98 @@
+{
+  "postgres": {
+    "before": {
+      "timing": {
+        "runs": [
+          1.2372441000043182,
+          1.3212805000075605,
+          1.4402461999998195,
+          1.6265810000040801,
+          3.118431700000656
+        ],
+        "median_seconds": 1.4402461999998195,
+        "min_seconds": 1.2372441000043182,
+        "max_seconds": 3.118431700000656
+      },
+      "plan_evidence": "                                                                               QUERY PLAN                                                                               \n------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n Finalize Aggregate  (cost=321977.36..321977.37 rows=1 width=8) (actual time=1137.628..1139.392 rows=1 loops=1)\n   ->  Gather  (cost=321977.14..321977.35 rows=2 width=8) (actual time=1137.502..1139.384 rows=3 loops=1)\n         Workers Planned: 2\n         Workers Launched: 2\n         ->  Partial Aggregate  (cost=320977.14..320977.15 rows=1 width=8) (actual time=1129.465..1129.466 rows=1 loops=3)\n               ->  Parallel Seq Scan on events  (cost=0.00..320524.92 rows=180888 width=0) (actual time=0.200..1097.609 rows=137363 loops=3)\n                     Filter: ((event_time >= '2026-08-02 00:00:00'::timestamp without time zone) AND (event_time < '2026-09-01 00:00:00'::timestamp without time zone))\n                     Rows Removed by Filter: 4862637\n Planning Time: 0.619 ms\n Execution Time: 1139.592 ms\n(10 rows)\n\n"
+    },
+    "after": {
+      "timing": {
+        "runs": [
+          0.28877009999996517,
+          0.3657995999965351,
+          0.507629600004293,
+          0.7795993000036106,
+          0.874287300001015
+        ],
+        "median_seconds": 0.507629600004293,
+        "min_seconds": 0.28877009999996517,
+        "max_seconds": 0.874287300001015
+      },
+      "plan_evidence": "                                                                                  QUERY PLAN                                                                                  \n------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n Finalize Aggregate  (cost=10261.88..10261.89 rows=1 width=8) (actual time=117.171..119.839 rows=1 loops=1)\n   ->  Gather  (cost=10261.67..10261.88 rows=2 width=8) (actual time=117.023..119.832 rows=3 loops=1)\n         Workers Planned: 2\n         Workers Launched: 2\n         ->  Partial Aggregate  (cost=9261.67..9261.68 rows=1 width=8) (actual time=108.467..108.468 rows=1 loops=3)\n               ->  Parallel Append  (cost=0.00..9259.32 rows=939 width=0) (actual time=0.031..90.049 rows=137363 loops=3)\n                     ->  Parallel Seq Scan on events_y2026m08  (cost=0.00..9254.62 rows=939 width=0) (actual time=0.030..65.598 rows=137363 loops=3)\n                           Filter: ((event_time >= '2026-08-02 00:00:00'::timestamp without time zone) AND (event_time < '2026-09-01 00:00:00'::timestamp without time zone))\n                           Rows Removed by Filter: 4600\n Planning Time: 3.119 ms\n Execution Time: 119.897 ms\n(11 rows)\n\n"
+    }
+  },
+  "mysql": {
+    "before": {
+      "timing": {
+        "runs": [
+          7.11998480001057,
+          8.470380300001125,
+          10.098765900009312,
+          11.190911700003198,
+          39.45128670000122
+        ],
+        "median_seconds": 10.098765900009312,
+        "min_seconds": 7.11998480001057,
+        "max_seconds": 39.45128670000122
+      },
+      "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\tevents\tNULL\tALL\tNULL\tNULL\tNULL\tNULL\t13600685\t11.11\tUsing where\n"
+    },
+    "after": {
+      "timing": {
+        "runs": [
+          0.8211392999801319,
+          0.8451800000038929,
+          0.8855667999887373,
+          1.5361022999859415,
+          1.755519500002265
+        ],
+        "median_seconds": 0.8855667999887373,
+        "min_seconds": 0.8211392999801319,
+        "max_seconds": 1.755519500002265
+      },
+      "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\tevents\tp202309,p202608\tindex\tNULL\tcustomer_id\t8\tNULL\t804681\t11.11\tUsing where; Using index\n"
+    }
+  },
+  "sqlserver": {
+    "before": {
+      "timing": {
+        "runs": [
+          1.3144213000196032,
+          1.5561254000058398,
+          1.7041939000191633,
+          1.8824193000036757,
+          3.816655800008448
+        ],
+        "median_seconds": 1.7041939000191633,
+        "min_seconds": 1.3144213000196032,
+        "max_seconds": 3.816655800008448
+      },
+      "plan_evidence": "           \n-----------\n     412090\n\n(1 rows affected)\nTable 'events'. Scan count 5, logical reads 271988, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+    },
+    "after": {
+      "timing": {
+        "runs": [
+          0.4542654999822844,
+          0.6503918999806046,
+          0.8174616000032984,
+          0.9235410999972373,
+          1.1469537000230048
+        ],
+        "median_seconds": 0.8174616000032984,
+        "min_seconds": 0.4542654999822844,
+        "max_seconds": 1.1469537000230048
+      },
+      "plan_evidence": "           \n-----------\n     412090\n\n(1 rows affected)\nTable 'events'. Scan count 6, logical reads 8101, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+    }
+  }
+}
