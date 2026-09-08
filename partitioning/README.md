@@ -102,3 +102,38 @@ logical reads) is saved in `results.json` for the write-up.
 - SQL Server's `STATISTICS IO` logical reads should drop substantially between runs.
 - Note the write overhead trade-off too, not just the read win — worth a line in the
   eventual write-up.
+
+## Results
+
+All three engines completed and validated at full scale (15M events, 37 monthly partitions):
+
+| Engine | Before | After | Speedup | Mechanism evidence |
+|---|---|---|---|---|
+| PostgreSQL | 1440ms | 508ms | 2.8x | `EXPLAIN ANALYZE`: 1 of 37 partitions scanned |
+| MySQL | 10099ms | 886ms | 11.4x | `EXPLAIN PARTITIONS`: pruned to 2 of 37 partitions |
+| SQL Server | 1704ms | 467ms | 3.6x (33.6x fewer logical reads) | `STATISTICS IO`: 271,988 → 8,101 logical reads |
+
+**Notable finding (MySQL):** `EXPLAIN PARTITIONS` included partition `p202309` (the
+very first, September 2023) even though no row there could possibly match a filter
+on `event_time >= '2026-08-02'`. This is a known MySQL 5.7 partition-pruning
+limitation for `TO_DAYS()`-based range partitions with two-sided predicates — the
+optimizer is occasionally conservative about boundary partitions. Not a bug in the
+migration; still eliminated 35 of 37 partitions.
+
+**Notable finding (all engines):** even after partitioning, none of the three
+engines can do a true index *seek* within the matched partition(s) — the composite
+PK `(event_id, event_time)` doesn't have `event_time` as a leading column, so each
+matched partition still gets a full scan (just a much smaller one). That gap is
+exactly what the indexing module addresses next.
+
+**Environment lessons learned along the way** (worth knowing if reproducing this):
+- MySQL's default 128MB InnoDB buffer pool caused the partitioning `ALTER TABLE` to
+  stall for 7+ hours at 15M-row scale; fixed by bumping it to 1GB in docker-compose.
+- MySQL DDL auto-commits per statement (no multi-statement transaction), so an
+  interrupted run can leave partial progress — the generated script checks current
+  state before each step rather than assuming a fresh start.
+- Postgres's migration is fully transactional (`BEGIN`/`COMMIT`), so an interrupted
+  run rolls back completely and cleanly — just re-run it.
+- All three survived an abrupt host-level interruption (containers crashing
+  simultaneously) with no data loss, thanks to each engine's own crash recovery
+  (WAL for Postgres, redo log for InnoDB, transaction log for SQL Server).
