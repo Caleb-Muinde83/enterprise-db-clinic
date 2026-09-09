@@ -82,15 +82,15 @@
     "after": {
       "timing": {
         "runs": [
-          0.4542654999822844,
-          0.6503918999806046,
-          0.8174616000032984,
-          0.9235410999972373,
-          1.1469537000230048
+          0.3672024999978021,
+          0.4586915000109002,
+          0.4670153000042774,
+          0.6071291000116616,
+          2.2212480999878608
         ],
-        "median_seconds": 0.8174616000032984,
-        "min_seconds": 0.4542654999822844,
-        "max_seconds": 1.1469537000230048
+        "median_seconds": 0.4670153000042774,
+        "min_seconds": 0.3672024999978021,
+        "max_seconds": 2.2212480999878608
       },
       "plan_evidence": "           \n-----------\n     412090\n\n(1 rows affected)\nTable 'events'. Scan count 6, logical reads 8101, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
     }
