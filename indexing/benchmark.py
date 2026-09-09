@@ -32,14 +32,19 @@ RANGE_END = "2026-09-01"
 
 # query_name -> SQL text, per engine. Kept mostly identical across engines;
 # only date/quoting differences would go here if they existed (they don't, for these).
+# customer_id 261876 chosen by querying actual order-count distribution — ranked
+# ~5000th of 500K customers by order count (52 orders). customer_id=1 was
+# originally used here but turned out to have only 3 orders total, an
+# unrepresentatively rare case where docker-exec/connection overhead (a few
+# hundred ms, constant across every query) swamped the real signal entirely.
 QUERIES = {
-    "orders_by_customer": "SELECT COUNT(*) FROM orders WHERE customer_id = 1;",
-    "orders_by_customer_status": "SELECT COUNT(*) FROM orders WHERE customer_id = 1 AND status = 'paid';",
+    "orders_by_customer": "SELECT COUNT(*) FROM orders WHERE customer_id = 261876;",
+    "orders_by_customer_status": "SELECT COUNT(*) FROM orders WHERE customer_id = 261876 AND status = 'paid';",
     "order_items_by_order": "SELECT COUNT(*) FROM order_items WHERE order_id = 1;",
     "order_items_by_product": "SELECT COUNT(*) FROM order_items WHERE product_id = 1;",
     "payments_by_order": "SELECT COUNT(*) FROM payments WHERE order_id = 1;",
     "events_by_customer_daterange": (
-        f"SELECT COUNT(*) FROM events WHERE customer_id = 1 "
+        f"SELECT COUNT(*) FROM events WHERE customer_id = 261876 "
         f"AND event_time >= '{RANGE_START}' AND event_time < '{RANGE_END}';"
     ),
 }
@@ -158,11 +163,13 @@ def save_results(results):
         json.dump(results, f, indent=2)
 
 
-def measure(engine, label):
+def measure(engine, label, only_query=None):
     results = load_results()
     results.setdefault(engine, {}).setdefault(label, {})
 
-    for query_name, sql in QUERIES.items():
+    queries_to_run = {only_query: QUERIES[only_query]} if only_query else QUERIES
+
+    for query_name, sql in queries_to_run.items():
         print(f"Timing {engine} ({label}) — {query_name}...")
         timing = time_query(engine, sql)
         print(f"  median: {timing['median_seconds']*1000:.1f} ms")
@@ -214,6 +221,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--engine", choices=RUNNERS.keys())
     parser.add_argument("--label", choices=["before", "after"])
+    parser.add_argument("--query", choices=QUERIES.keys(), default=None,
+                         help="Benchmark only this one query instead of all 6")
     parser.add_argument("--report", action="store_true")
     parser.add_argument("--usage-stats", action="store_true")
     parser.add_argument("--duplicate-check", action="store_true")
@@ -230,7 +239,7 @@ def main():
             parser.error("--duplicate-check requires --engine")
         duplicate_check(args.engine)
     elif args.engine and args.label:
-        measure(args.engine, args.label)
+        measure(args.engine, args.label, only_query=args.query)
     else:
         parser.error("Either --report, --usage-stats, --duplicate-check, "
                       "or both --engine and --label, are required.")
