@@ -196,6 +196,53 @@ def duplicate_check(engine):
     print(result.stdout)
 
 
+def _parse_mysql_explain(text):
+    """MySQL's EXPLAIN output is tab-separated with a header row — 'type' and 'key'
+    are column NAMES, so a regex search for the literal word finds the header row
+    itself, not the data below it. Parse by column position instead."""
+    lines = [l for l in text.strip().split("\n") if l.strip()]
+    if len(lines) < 2:
+        return "—"
+    header = lines[0].split("\t")
+    data = lines[1].split("\t")
+    row = dict(zip(header, data))
+    return f"{row.get('type', '?')}/{row.get('key', '?')}"
+
+
+def evidence_report(engine):
+    """Extracts real, overhead-free evidence per query: Postgres's EXPLAIN ANALYZE
+    Execution Time, MySQL's plan type/key (structural proof, since 5.7 has no
+    EXPLAIN ANALYZE timing), SQL Server's STATISTICS IO logical reads. Wall-clock
+    docker-exec timing is unreliable for sub-millisecond queries (confirmed
+    repeatedly during this module's development) — this is the trustworthy number."""
+    import re
+    results = load_results()
+    data = results.get(engine, {})
+
+    print(f"{'Query':<32} {'Before':<20} {'After':<20}")
+    print("-" * 76)
+
+    for q in QUERIES:
+        before_plan = data.get("before", {}).get(q, {}).get("plan_evidence", "")
+        after_plan = data.get("after", {}).get(q, {}).get("plan_evidence", "")
+
+        if engine == "postgres":
+            bm = re.search(r"Execution Time: ([\d.]+) ms", before_plan)
+            am = re.search(r"Execution Time: ([\d.]+) ms", after_plan)
+            before_val = f"{bm.group(1)}ms" if bm else "—"
+            after_val = f"{am.group(1)}ms" if am else "—"
+        elif engine == "mysql":
+            before_val = _parse_mysql_explain(before_plan)
+            after_val = _parse_mysql_explain(after_plan)
+        else:  # sqlserver
+            bm = re.search(r"logical reads (\d+)", before_plan)
+            am = re.search(r"logical reads (\d+)", after_plan)
+            before_val = f"{bm.group(1)} reads" if bm else "—"
+            after_val = f"{am.group(1)} reads" if am else "—"
+
+        print(f"{q:<32} {before_val:<20} {after_val:<20}")
+
+
 def report():
     results = load_results()
     if not results:
@@ -224,12 +271,19 @@ def main():
     parser.add_argument("--query", choices=QUERIES.keys(), default=None,
                          help="Benchmark only this one query instead of all 6")
     parser.add_argument("--report", action="store_true")
+    parser.add_argument("--evidence-report", action="store_true",
+                         help="Real mechanism-level evidence per query (execution time / "
+                              "index usage / logical reads), not noisy wall-clock timing")
     parser.add_argument("--usage-stats", action="store_true")
     parser.add_argument("--duplicate-check", action="store_true")
     args = parser.parse_args()
 
     if args.report:
         report()
+    elif args.evidence_report:
+        if not args.engine:
+            parser.error("--evidence-report requires --engine")
+        evidence_report(args.engine)
     elif args.usage_stats:
         if not args.engine:
             parser.error("--usage-stats requires --engine")
@@ -241,8 +295,8 @@ def main():
     elif args.engine and args.label:
         measure(args.engine, args.label, only_query=args.query)
     else:
-        parser.error("Either --report, --usage-stats, --duplicate-check, "
-                      "or both --engine and --label, are required.")
+        parser.error("Either --report, --evidence-report, --usage-stats, "
+                      "--duplicate-check, or both --engine and --label, are required.")
 
 
 if __name__ == "__main__":
