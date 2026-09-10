@@ -1,0 +1,308 @@
+{
+  "postgres": {
+    "before": {
+      "orders_by_customer": {
+        "timing": {
+          "median_seconds": 0.5410593000124209,
+          "min_seconds": 0.5124492999748327,
+          "max_seconds": 1.1414064999553375
+        },
+        "plan_evidence": "                                                             QUERY PLAN                                                              \n-------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=179.77..179.78 rows=1 width=8) (actual time=0.080..0.081 rows=1 loops=1)\n   ->  Bitmap Heap Scan on orders  (cost=4.78..179.66 rows=45 width=0) (actual time=0.071..0.075 rows=3 loops=1)\n         Recheck Cond: (customer_id = 1)\n         Heap Blocks: exact=3\n         ->  Bitmap Index Scan on ix_orders_customer_id  (cost=0.00..4.77 rows=45 width=0) (actual time=0.046..0.046 rows=3 loops=1)\n               Index Cond: (customer_id = 1)\n Planning Time: 0.722 ms\n Execution Time: 0.217 ms\n(8 rows)\n\n"
+      },
+      "orders_by_customer_status": {
+        "timing": {
+          "median_seconds": 0.41787760000443086,
+          "min_seconds": 0.3120774999842979,
+          "max_seconds": 0.4567555999965407
+        },
+        "plan_evidence": "                                                                  QUERY PLAN                                                                  \n----------------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=29.70..29.71 rows=1 width=8) (actual time=0.140..0.140 rows=1 loops=1)\n   ->  Index Only Scan using ix_orders_status_customer on orders  (cost=0.43..29.69 rows=7 width=0) (actual time=0.132..0.133 rows=1 loops=1)\n         Index Cond: ((status = 'paid'::text) AND (customer_id = 1))\n         Heap Fetches: 1\n Planning Time: 1.098 ms\n Execution Time: 0.288 ms\n(6 rows)\n\n"
+      },
+      "order_items_by_order": {
+        "timing": {
+          "median_seconds": 0.39341820002300665,
+          "min_seconds": 0.32088769995607436,
+          "max_seconds": 1.2990733999758959
+        },
+        "plan_evidence": "                                                                   QUERY PLAN                                                                   \n------------------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=8.53..8.54 rows=1 width=8) (actual time=0.053..0.054 rows=1 loops=1)\n   ->  Index Only Scan using ix_order_items_order_id on order_items  (cost=0.43..8.52 rows=5 width=0) (actual time=0.046..0.048 rows=4 loops=1)\n         Index Cond: (order_id = 1)\n         Heap Fetches: 4\n Planning Time: 0.464 ms\n Execution Time: 0.212 ms\n(6 rows)\n\n"
+      },
+      "order_items_by_product": {
+        "timing": {
+          "median_seconds": 0.2797164999647066,
+          "min_seconds": 0.2429796999786049,
+          "max_seconds": 0.8772773999953642
+        },
+        "plan_evidence": "                                                                 QUERY PLAN                                                                  \n---------------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=1440.86..1440.87 rows=1 width=8) (actual time=0.665..0.666 rows=1 loops=1)\n   ->  Bitmap Heap Scan on order_items  (cost=11.37..1439.91 rows=379 width=0) (actual time=0.107..0.636 rows=347 loops=1)\n         Recheck Cond: (product_id = 1)\n         Heap Blocks: exact=347\n         ->  Bitmap Index Scan on ix_order_items_product_id  (cost=0.00..11.27 rows=379 width=0) (actual time=0.060..0.061 rows=347 loops=1)\n               Index Cond: (product_id = 1)\n Planning Time: 0.348 ms\n Execution Time: 0.733 ms\n(8 rows)\n\n"
+      },
+      "payments_by_order": {
+        "timing": {
+          "median_seconds": 0.27514460001839325,
+          "min_seconds": 0.2341660000383854,
+          "max_seconds": 0.3052796999691054
+        },
+        "plan_evidence": "                                                                QUERY PLAN                                                                \n------------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=8.45..8.46 rows=1 width=8) (actual time=0.034..0.035 rows=1 loops=1)\n   ->  Index Only Scan using ix_payments_order_id on payments  (cost=0.43..8.45 rows=1 width=0) (actual time=0.031..0.031 rows=1 loops=1)\n         Index Cond: (order_id = 1)\n         Heap Fetches: 1\n Planning Time: 0.318 ms\n Execution Time: 0.092 ms\n(6 rows)\n\n"
+      },
+      "events_by_customer_daterange": {
+        "timing": {
+          "median_seconds": 0.7821542000165209,
+          "min_seconds": 0.3992650000145659,
+          "max_seconds": 1.3689864000189118
+        },
+        "plan_evidence": "                                                                                               QUERY PLAN                                                                                                \n---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n Finalize Aggregate  (cost=10543.69..10543.70 rows=1 width=8) (actual time=54.501..57.100 rows=1 loops=1)\n   ->  Gather  (cost=10543.48..10543.69 rows=2 width=8) (actual time=54.380..57.093 rows=3 loops=1)\n         Workers Planned: 2\n         Workers Launched: 2\n         ->  Partial Aggregate  (cost=9543.48..9543.49 rows=1 width=8) (actual time=48.737..48.739 rows=1 loops=3)\n               ->  Parallel Append  (cost=0.00..9543.47 rows=3 width=0) (actual time=32.703..48.734 rows=0 loops=3)\n                     ->  Parallel Seq Scan on events_y2026m08  (cost=0.00..9543.46 rows=3 width=0) (actual time=32.702..48.732 rows=0 loops=3)\n                           Filter: ((event_time >= '2026-08-02 00:00:00'::timestamp without time zone) AND (event_time < '2026-09-01 00:00:00'::timestamp without time zone) AND (customer_id = 261876))\n                           Rows Removed by Filter: 141963\n Planning Time: 2.849 ms\n Execution Time: 57.163 ms\n(11 rows)\n\n"
+      }
+    },
+    "after": {
+      "orders_by_customer": {
+        "timing": {
+          "median_seconds": 0.4205966999870725,
+          "min_seconds": 0.23988200002349913,
+          "max_seconds": 0.8775519999908283
+        },
+        "plan_evidence": "                                                               QUERY PLAN                                                                \n-----------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=179.77..179.78 rows=1 width=8) (actual time=0.048..0.049 rows=1 loops=1)\n   ->  Bitmap Heap Scan on orders  (cost=4.78..179.66 rows=45 width=0) (actual time=0.040..0.044 rows=3 loops=1)\n         Recheck Cond: (customer_id = 1)\n         Heap Blocks: exact=3\n         ->  Bitmap Index Scan on ix_orders_customer_status  (cost=0.00..4.77 rows=45 width=0) (actual time=0.024..0.024 rows=3 loops=1)\n               Index Cond: (customer_id = 1)\n Planning Time: 0.496 ms\n Execution Time: 0.133 ms\n(8 rows)\n\n"
+      },
+      "orders_by_customer_status": {
+        "timing": {
+          "median_seconds": 0.3225652999826707,
+          "min_seconds": 0.2675984000088647,
+          "max_seconds": 0.35458440001821145
+        },
+        "plan_evidence": "                                                                  QUERY PLAN                                                                  \n----------------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=32.59..32.60 rows=1 width=8) (actual time=0.069..0.070 rows=1 loops=1)\n   ->  Index Only Scan using ix_orders_customer_status on orders  (cost=0.43..32.57 rows=7 width=0) (actual time=0.063..0.064 rows=1 loops=1)\n         Index Cond: ((customer_id = 1) AND (status = 'paid'::text))\n         Heap Fetches: 1\n Planning Time: 0.450 ms\n Execution Time: 0.164 ms\n(6 rows)\n\n"
+      },
+      "order_items_by_order": {
+        "timing": {
+          "median_seconds": 0.2859075000160374,
+          "min_seconds": 0.23245550005231053,
+          "max_seconds": 0.9453786999802105
+        },
+        "plan_evidence": "                                                                   QUERY PLAN                                                                   \n------------------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=8.53..8.54 rows=1 width=8) (actual time=0.051..0.052 rows=1 loops=1)\n   ->  Index Only Scan using ix_order_items_order_id on order_items  (cost=0.43..8.52 rows=5 width=0) (actual time=0.045..0.046 rows=4 loops=1)\n         Index Cond: (order_id = 1)\n         Heap Fetches: 4\n Planning Time: 0.496 ms\n Execution Time: 0.131 ms\n(6 rows)\n\n"
+      },
+      "order_items_by_product": {
+        "timing": {
+          "median_seconds": 0.3508958999882452,
+          "min_seconds": 0.26547550002578646,
+          "max_seconds": 0.3929706999915652
+        },
+        "plan_evidence": "                                                                 QUERY PLAN                                                                  \n---------------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=1440.86..1440.87 rows=1 width=8) (actual time=0.732..0.733 rows=1 loops=1)\n   ->  Bitmap Heap Scan on order_items  (cost=11.37..1439.91 rows=379 width=0) (actual time=0.108..0.697 rows=347 loops=1)\n         Recheck Cond: (product_id = 1)\n         Heap Blocks: exact=347\n         ->  Bitmap Index Scan on ix_order_items_product_id  (cost=0.00..11.27 rows=379 width=0) (actual time=0.062..0.063 rows=347 loops=1)\n               Index Cond: (product_id = 1)\n Planning Time: 0.337 ms\n Execution Time: 0.800 ms\n(8 rows)\n\n"
+      },
+      "payments_by_order": {
+        "timing": {
+          "median_seconds": 0.24579479999374598,
+          "min_seconds": 0.24365399999078363,
+          "max_seconds": 0.33155329996952787
+        },
+        "plan_evidence": "                                                                QUERY PLAN                                                                \n------------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=8.45..8.46 rows=1 width=8) (actual time=0.066..0.067 rows=1 loops=1)\n   ->  Index Only Scan using ix_payments_order_id on payments  (cost=0.43..8.45 rows=1 width=0) (actual time=0.060..0.061 rows=1 loops=1)\n         Index Cond: (order_id = 1)\n         Heap Fetches: 1\n Planning Time: 0.574 ms\n Execution Time: 0.217 ms\n(6 rows)\n\n"
+      },
+      "events_by_customer_daterange": {
+        "timing": {
+          "median_seconds": 0.9346242999890819,
+          "min_seconds": 0.34864129999186844,
+          "max_seconds": 1.3534022000385448
+        },
+        "plan_evidence": "                                                                                              QUERY PLAN                                                                                               \n-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=31.99..32.00 rows=1 width=8) (actual time=0.071..0.072 rows=1 loops=1)\n   ->  Append  (cost=4.51..31.98 rows=7 width=0) (actual time=0.066..0.067 rows=1 loops=1)\n         ->  Bitmap Heap Scan on events_y2026m08  (cost=4.51..31.94 rows=7 width=0) (actual time=0.065..0.066 rows=1 loops=1)\n               Recheck Cond: ((customer_id = 261876) AND (event_time >= '2026-08-02 00:00:00'::timestamp without time zone) AND (event_time < '2026-09-01 00:00:00'::timestamp without time zone))\n               Heap Blocks: exact=1\n               ->  Bitmap Index Scan on events_y2026m08_customer_id_event_time_idx  (cost=0.00..4.51 rows=7 width=0) (actual time=0.033..0.033 rows=1 loops=1)\n                     Index Cond: ((customer_id = 261876) AND (event_time >= '2026-08-02 00:00:00'::timestamp without time zone) AND (event_time < '2026-09-01 00:00:00'::timestamp without time zone))\n Planning Time: 12.345 ms\n Execution Time: 0.148 ms\n(9 rows)\n\n"
+      }
+    }
+  },
+  "mysql": {
+    "before": {
+      "orders_by_customer": {
+        "timing": {
+          "median_seconds": 0.33870680001564324,
+          "min_seconds": 0.2253148999880068,
+          "max_seconds": 0.5030160000314936
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\torders\tNULL\tref\tix_orders_customer_date,ix_orders_customer_id\tix_orders_customer_id\t8\tconst\t3\t100.00\tUsing index\n"
+      },
+      "orders_by_customer_status": {
+        "timing": {
+          "median_seconds": 0.34242669999366626,
+          "min_seconds": 0.18716659996425733,
+          "max_seconds": 0.42861589998938143
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\torders\tNULL\tref\tix_orders_customer_date,ix_orders_status_customer,ix_orders_customer_id\tix_orders_status_customer\t30\tconst,const\t1\t100.00\tUsing index\n"
+      },
+      "order_items_by_order": {
+        "timing": {
+          "median_seconds": 0.24829480005428195,
+          "min_seconds": 0.2076678000157699,
+          "max_seconds": 0.32085459999507293
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\torder_items\tNULL\tref\tix_order_items_order_id\tix_order_items_order_id\t8\tconst\t4\t100.00\tUsing index\n"
+      },
+      "order_items_by_product": {
+        "timing": {
+          "median_seconds": 0.19980800000485033,
+          "min_seconds": 0.1920924999867566,
+          "max_seconds": 0.3252142000128515
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\torder_items\tNULL\tref\tix_order_items_product_id\tix_order_items_product_id\t8\tconst\t347\t100.00\tUsing index\n"
+      },
+      "payments_by_order": {
+        "timing": {
+          "median_seconds": 0.24249350000172853,
+          "min_seconds": 0.19805360003374517,
+          "max_seconds": 0.371700800023973
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\tpayments\tNULL\tref\tix_payments_order_id\tix_payments_order_id\t8\tconst\t1\t100.00\tUsing index\n"
+      },
+      "events_by_customer_daterange": {
+        "timing": {
+          "median_seconds": 0.7634711000137031,
+          "min_seconds": 0.7001307000173256,
+          "max_seconds": 7.514656000013929
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\tevents\tp202309,p202608\tALL\tNULL\tNULL\tNULL\tNULL\t804681\t1.11\tUsing where\n"
+      }
+    },
+    "after": {
+      "orders_by_customer": {
+        "timing": {
+          "median_seconds": 0.21776530001079664,
+          "min_seconds": 0.18273880000924692,
+          "max_seconds": 0.35409330000402406
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\torders\tNULL\tref\tix_orders_customer_date,ix_orders_customer_status\tix_orders_customer_date\t8\tconst\t3\t100.00\tUsing index\n"
+      },
+      "orders_by_customer_status": {
+        "timing": {
+          "median_seconds": 0.23110759997507557,
+          "min_seconds": 0.20691720000468194,
+          "max_seconds": 0.3246567000169307
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\torders\tNULL\tref\tix_orders_customer_date,ix_orders_customer_status\tix_orders_customer_status\t30\tconst,const\t1\t100.00\tUsing index\n"
+      },
+      "order_items_by_order": {
+        "timing": {
+          "median_seconds": 0.4140734999673441,
+          "min_seconds": 0.29484980000415817,
+          "max_seconds": 0.8527947000111453
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\torder_items\tNULL\tref\tix_order_items_order_id\tix_order_items_order_id\t8\tconst\t4\t100.00\tUsing index\n"
+      },
+      "order_items_by_product": {
+        "timing": {
+          "median_seconds": 0.30017910001333803,
+          "min_seconds": 0.25047060003271326,
+          "max_seconds": 0.3624112000106834
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\torder_items\tNULL\tref\tix_order_items_product_id\tix_order_items_product_id\t8\tconst\t347\t100.00\tUsing index\n"
+      },
+      "payments_by_order": {
+        "timing": {
+          "median_seconds": 0.22772640001494437,
+          "min_seconds": 0.18602609995286912,
+          "max_seconds": 0.24637509998865426
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\tpayments\tNULL\tref\tix_payments_order_id\tix_payments_order_id\t8\tconst\t1\t100.00\tUsing index\n"
+      },
+      "events_by_customer_daterange": {
+        "timing": {
+          "median_seconds": 0.5106120000127703,
+          "min_seconds": 0.21141699998406693,
+          "max_seconds": 0.7747181999729946
+        },
+        "plan_evidence": "id\tselect_type\ttable\tpartitions\ttype\tpossible_keys\tkey\tkey_len\tref\trows\tfiltered\tExtra\n1\tSIMPLE\tevents\tp202309,p202608\trange\tix_events_customer_time\tix_events_customer_time\t13\tNULL\t1\t100.00\tUsing where; Using index\n"
+      }
+    }
+  },
+  "sqlserver": {
+    "before": {
+      "orders_by_customer": {
+        "timing": {
+          "median_seconds": 0.45174270001007244,
+          "min_seconds": 0.3328231000341475,
+          "max_seconds": 0.5027434999938123
+        },
+        "plan_evidence": "           \n-----------\n          3\n\n(1 rows affected)\nTable 'orders'. Scan count 1, logical reads 3, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      },
+      "orders_by_customer_status": {
+        "timing": {
+          "median_seconds": 0.33166670001810417,
+          "min_seconds": 0.29217659996356815,
+          "max_seconds": 0.4147298999596387
+        },
+        "plan_evidence": "           \n-----------\n          1\n\n(1 rows affected)\nTable 'orders'. Scan count 1, logical reads 4, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      },
+      "order_items_by_order": {
+        "timing": {
+          "median_seconds": 0.6726357000297867,
+          "min_seconds": 0.5639256999711506,
+          "max_seconds": 1.1763292999821715
+        },
+        "plan_evidence": "           \n-----------\n          4\n\n(1 rows affected)\nTable 'order_items'. Scan count 5, logical reads 43056, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      },
+      "order_items_by_product": {
+        "timing": {
+          "median_seconds": 0.6658689999603666,
+          "min_seconds": 0.48516330000711605,
+          "max_seconds": 1.675831999978982
+        },
+        "plan_evidence": "           \n-----------\n        347\n\n(1 rows affected)\nTable 'order_items'. Scan count 5, logical reads 43056, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      },
+      "payments_by_order": {
+        "timing": {
+          "median_seconds": 0.3776433999883011,
+          "min_seconds": 0.3263083000201732,
+          "max_seconds": 1.2958637999836355
+        },
+        "plan_evidence": "           \n-----------\n          1\n\n(1 rows affected)\nTable 'payments'. Scan count 5, logical reads 24441, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      },
+      "events_by_customer_daterange": {
+        "timing": {
+          "median_seconds": 0.2662492999807,
+          "min_seconds": 0.2231470999540761,
+          "max_seconds": 0.7148807999910787
+        },
+        "plan_evidence": "           \n-----------\n          1\n\n(1 rows affected)\nTable 'events'. Scan count 6, logical reads 8101, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      }
+    },
+    "after": {
+      "orders_by_customer": {
+        "timing": {
+          "median_seconds": 0.24143029999686405,
+          "min_seconds": 0.19275330001255497,
+          "max_seconds": 0.42990350001491606
+        },
+        "plan_evidence": "           \n-----------\n          3\n\n(1 rows affected)\nTable 'orders'. Scan count 1, logical reads 3, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      },
+      "orders_by_customer_status": {
+        "timing": {
+          "median_seconds": 0.21800200000870973,
+          "min_seconds": 0.2009292999864556,
+          "max_seconds": 0.3203328999807127
+        },
+        "plan_evidence": "           \n-----------\n          1\n\n(1 rows affected)\nTable 'orders'. Scan count 1, logical reads 3, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      },
+      "order_items_by_order": {
+        "timing": {
+          "median_seconds": 0.31987509998725727,
+          "min_seconds": 0.21112659998470917,
+          "max_seconds": 1.958499700005632
+        },
+        "plan_evidence": "           \n-----------\n          4\n\n(1 rows affected)\nTable 'order_items'. Scan count 1, logical reads 3, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      },
+      "order_items_by_product": {
+        "timing": {
+          "median_seconds": 0.5032684000325389,
+          "min_seconds": 0.2941842000000179,
+          "max_seconds": 0.8195324999978766
+        },
+        "plan_evidence": "           \n-----------\n        347\n\n(1 rows affected)\nTable 'order_items'. Scan count 1, logical reads 3, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      },
+      "payments_by_order": {
+        "timing": {
+          "median_seconds": 0.28217670001322404,
+          "min_seconds": 0.2266073999926448,
+          "max_seconds": 0.6239408000255935
+        },
+        "plan_evidence": "           \n-----------\n          1\n\n(1 rows affected)\nTable 'payments'. Scan count 1, logical reads 3, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      },
+      "events_by_customer_daterange": {
+        "timing": {
+          "median_seconds": 0.3522420999943279,
+          "min_seconds": 0.22890449996339157,
+          "max_seconds": 0.8568563999724574
+        },
+        "plan_evidence": "           \n-----------\n          1\n\n(1 rows affected)\nTable 'events'. Scan count 2, logical reads 3, physical reads 0, read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob read-ahead reads 0.\n"
+      }
+    }
+  }
+}
