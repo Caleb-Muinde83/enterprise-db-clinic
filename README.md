@@ -14,7 +14,7 @@ Full curriculum and module specs: [`docs/curriculum.md`](docs/curriculum.md)
 | 0 | Foundation — dataset + environments | ✅ complete |
 | 1 | [Unpartitioned tables at scale](partitioning/README.md) | ✅ complete |
 | 2 | [Missing / incorrect indexing](indexing/README.md) | ✅ complete |
-| 3 | Schema drift / normalization debt | ⏳ not started |
+| 3 | [Schema drift / normalization debt](schema-drift/README.md) | 🚧 in progress |
 | 4 | Zero-downtime migration (all 3 engines) | ⏳ not started |
 | 5 | Deprecated version migration (run last) | ⏳ not started |
 | 6 | Cross-engine comparison (Oracle, MongoDB) | ⏳ not started |
