@@ -116,8 +116,11 @@ def build_order_address_map(engine, run):
                 FROM (SELECT order_id, shipping_address AS j FROM orders
                       WHERE shipping_address IS NOT NULL) p
                 JOIN addresses a
-                  ON a.street = p.j->>'$.street' AND a.city = p.j->>'$.city' AND a.state = p.j->>'$.state'
-                 AND a.zip = p.j->>'$.zip' AND a.country = p.j->>'$.country';
+                  ON CONVERT(a.street USING utf8mb4) COLLATE utf8mb4_bin = CONVERT(p.j->>'$.street' USING utf8mb4) COLLATE utf8mb4_bin
+                 AND CONVERT(a.city USING utf8mb4) COLLATE utf8mb4_bin = CONVERT(p.j->>'$.city' USING utf8mb4) COLLATE utf8mb4_bin
+                 AND CONVERT(a.state USING utf8mb4) COLLATE utf8mb4_bin = CONVERT(p.j->>'$.state' USING utf8mb4) COLLATE utf8mb4_bin
+                 AND CONVERT(a.zip USING utf8mb4) COLLATE utf8mb4_bin = CONVERT(p.j->>'$.zip' USING utf8mb4) COLLATE utf8mb4_bin
+                 AND CONVERT(a.country USING utf8mb4) COLLATE utf8mb4_bin = CONVERT(p.j->>'$.country' USING utf8mb4) COLLATE utf8mb4_bin;
             """,
         ]
     else:  # sqlserver
