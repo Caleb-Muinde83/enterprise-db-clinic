@@ -81,6 +81,68 @@ JSON_EXTRACT = {
 }
 
 
+def build_order_address_map(engine, run):
+    """Parses shipping_address exactly ONCE per row (not five times, as the
+    original per-batch UPDATE did) into a lightweight order_id -> address_id
+    mapping table. The batched backfill then joins against this via a plain
+    BIGINT equality on order_id, instead of matching five TEXT columns
+    against freshly-reparsed JSON on every row of every batch — the original
+    approach took ~3 hours for 3M rows on Postgres; this reduces the JSON
+    parsing work by 5x and makes the batched join itself far cheaper."""
+    e = JSON_EXTRACT[engine]
+    print("Building order_id -> address_id mapping (parses JSON once per row)...")
+
+    if engine == "postgres":
+        steps = [
+            "DROP TABLE IF EXISTS order_address_map;",
+            """CREATE TABLE order_address_map (order_id BIGINT PRIMARY KEY, address_id BIGINT NOT NULL);""",
+            f"""
+                INSERT INTO order_address_map (order_id, address_id)
+                SELECT p.order_id, a.address_id
+                FROM (SELECT order_id, shipping_address::jsonb AS j FROM orders
+                      WHERE shipping_address IS NOT NULL) p
+                JOIN addresses a
+                  ON a.street = p.j->>'street' AND a.city = p.j->>'city' AND a.state = p.j->>'state'
+                 AND a.zip = p.j->>'zip' AND a.country = p.j->>'country';
+            """,
+        ]
+    elif engine == "mysql":
+        steps = [
+            "DROP TABLE IF EXISTS order_address_map;",
+            """CREATE TABLE order_address_map (order_id BIGINT PRIMARY KEY, address_id BIGINT NOT NULL) ENGINE=InnoDB;""",
+            """
+                INSERT INTO order_address_map (order_id, address_id)
+                SELECT p.order_id, a.address_id
+                FROM (SELECT order_id, shipping_address AS j FROM orders
+                      WHERE shipping_address IS NOT NULL) p
+                JOIN addresses a
+                  ON a.street = p.j->>'$.street' AND a.city = p.j->>'$.city' AND a.state = p.j->>'$.state'
+                 AND a.zip = p.j->>'$.zip' AND a.country = p.j->>'$.country';
+            """,
+        ]
+    else:  # sqlserver
+        steps = [
+            "IF OBJECT_ID('dbo.order_address_map','U') IS NOT NULL DROP TABLE order_address_map;",
+            """CREATE TABLE order_address_map (order_id BIGINT PRIMARY KEY, address_id BIGINT NOT NULL);""",
+            """
+                INSERT INTO order_address_map (order_id, address_id)
+                SELECT p.order_id, a.address_id
+                FROM (SELECT order_id, shipping_address AS j FROM orders
+                      WHERE shipping_address IS NOT NULL) p
+                CROSS APPLY (SELECT JSON_VALUE(p.j,'$.street') AS street, JSON_VALUE(p.j,'$.city') AS city,
+                                     JSON_VALUE(p.j,'$.state') AS state, JSON_VALUE(p.j,'$.zip') AS zip,
+                                     JSON_VALUE(p.j,'$.country') AS country) pj
+                JOIN addresses a
+                  ON a.street = pj.street AND a.city = pj.city AND a.state = pj.state
+                 AND a.zip = pj.zip AND a.country = pj.country;
+            """,
+        ]
+
+    for i, sql in enumerate(steps, 1):
+        check(run(sql), f"build order_address_map step {i}")
+    print("Mapping table built.")
+
+
 def create_addresses_table(engine, run):
     if engine == "postgres":
         sql = """
@@ -167,30 +229,23 @@ def add_address_id_column(engine, run):
 
 
 def backfill_batch(engine, run, lo, hi):
-    e = JSON_EXTRACT[engine]
     if engine == "sqlserver":
         sql = f"""
-            UPDATE o SET o.address_id = a.address_id
-            FROM orders o JOIN addresses a
-              ON a.street = {e['street']} AND a.city = {e['city']} AND a.state = {e['state']}
-             AND a.zip = {e['zip']} AND a.country = {e['country']}
-            WHERE o.order_id BETWEEN {lo} AND {hi} AND o.shipping_address IS NOT NULL;
+            UPDATE o SET o.address_id = m.address_id
+            FROM orders o JOIN order_address_map m ON m.order_id = o.order_id
+            WHERE o.order_id BETWEEN {lo} AND {hi};
         """
     elif engine == "mysql":
         sql = f"""
-            UPDATE orders o JOIN addresses a
-              ON a.street = {e['street']} AND a.city = {e['city']} AND a.state = {e['state']}
-             AND a.zip = {e['zip']} AND a.country = {e['country']}
-            SET o.address_id = a.address_id
-            WHERE o.order_id BETWEEN {lo} AND {hi} AND o.shipping_address IS NOT NULL;
+            UPDATE orders o JOIN order_address_map m ON m.order_id = o.order_id
+            SET o.address_id = m.address_id
+            WHERE o.order_id BETWEEN {lo} AND {hi};
         """
     else:  # postgres
         sql = f"""
-            UPDATE orders o SET address_id = a.address_id
-            FROM addresses a
-            WHERE a.street = {e['street']} AND a.city = {e['city']} AND a.state = {e['state']}
-              AND a.zip = {e['zip']} AND a.country = {e['country']}
-              AND o.order_id BETWEEN {lo} AND {hi} AND o.shipping_address IS NOT NULL;
+            UPDATE orders o SET address_id = m.address_id
+            FROM order_address_map m
+            WHERE m.order_id = o.order_id AND o.order_id BETWEEN {lo} AND {hi};
         """
     return run(sql)
 
@@ -227,8 +282,28 @@ def drop_shipping_address_column(engine, run):
         sql = "IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=OBJECT_ID('orders') AND name='shipping_address') ALTER TABLE orders DROP COLUMN shipping_address;"
     check(run(sql), "drop orders.shipping_address")
 
+    drop_map_sql = {
+        "postgres": "DROP TABLE IF EXISTS order_address_map;",
+        "mysql": "DROP TABLE IF EXISTS order_address_map;",
+        "sqlserver": "IF OBJECT_ID('dbo.order_address_map','U') IS NOT NULL DROP TABLE order_address_map;",
+    }
+    check(run(drop_map_sql[engine]), "drop order_address_map (ETL intermediate, no longer needed)")
+
+
+FK_EXISTS_CHECK = {
+    "postgres": "SELECT COUNT(*) FROM information_schema.table_constraints WHERE table_name='customer_notes' AND constraint_type='FOREIGN KEY';",
+    "mysql": "SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='customer_notes' AND CONSTRAINT_TYPE='FOREIGN KEY';",
+    "sqlserver": "SELECT COUNT(*) FROM sys.foreign_keys WHERE parent_object_id=OBJECT_ID('customer_notes');",
+}
+
 
 def fix_customer_notes(engine, run):
+    fk_result = run(FK_EXISTS_CHECK[engine])
+    nums = [int(n) for n in fk_result.stdout.split() if n.strip().isdigit()]
+    if nums and nums[0] > 0:
+        print("customer_notes FK already exists — already fixed for this engine, skipping.")
+        return
+
     print("Archiving malformed/orphaned customer_notes rows...")
     if engine == "postgres":
         steps = [
@@ -279,6 +354,20 @@ def fix_customer_notes(engine, run):
     print("customer_notes fixed: archived, retyped, FK added.")
 
 
+def shipping_address_column_exists(engine, run):
+    checks = {
+        "postgres": "SELECT COUNT(*) FROM information_schema.columns WHERE table_name='orders' AND column_name='shipping_address';",
+        "mysql": "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='orders' AND COLUMN_NAME='shipping_address';",
+        "sqlserver": "SELECT COUNT(*) FROM sys.columns WHERE object_id=OBJECT_ID('orders') AND name='shipping_address';",
+    }
+    result = run(checks[engine])
+    # COUNT(*) always returns exactly one row (0 or 1), unlike a plain SELECT 1
+    # which returns *zero rows* when absent — avoids parsing ambiguous "(0 rows)"
+    # text across three differently-formatted CLI outputs.
+    nums = [int(n) for n in result.stdout.split() if n.strip().isdigit()]
+    return bool(nums) and nums[0] > 0
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--engine", required=True, choices=RUNNERS.keys())
@@ -286,11 +375,18 @@ def main():
     run = RUNNERS[args.engine]
 
     print(f"=== Migrating {args.engine} ===\n")
-    create_addresses_table(args.engine, run)
-    populate_addresses(args.engine, run)
-    add_address_id_column(args.engine, run)
-    backfill_address_ids(args.engine, run)
-    drop_shipping_address_column(args.engine, run)
+
+    if not shipping_address_column_exists(args.engine, run):
+        print("orders.shipping_address already gone — address migration already "
+              "completed for this engine, skipping straight to customer_notes fix.\n")
+    else:
+        create_addresses_table(args.engine, run)
+        populate_addresses(args.engine, run)
+        add_address_id_column(args.engine, run)
+        build_order_address_map(args.engine, run)
+        backfill_address_ids(args.engine, run)
+        drop_shipping_address_column(args.engine, run)
+
     fix_customer_notes(args.engine, run)
     print("\nMigration complete.")
 
