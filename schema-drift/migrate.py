@@ -107,6 +107,15 @@ def build_order_address_map(engine, run):
             """,
         ]
     elif engine == "mysql":
+        # IMPORTANT: convert only the JSON-extracted (right-hand, non-indexed) side.
+        # An earlier version wrapped BOTH sides in CONVERT/COLLATE, which also
+        # wrapped addresses' own indexed columns -- making the join non-sargable
+        # and forcing a full unindexed nested-loop scan (3M x 442K rows), which
+        # ran for 3+ hours with no end in sight before being killed. Leaving
+        # a.street/a.city/etc. bare lets MySQL still use the uq_address index,
+        # while converting the JSON side alone still fixes the original
+        # collation error (JSON extraction defaults to utf8mb4_bin; addresses'
+        # columns inherited the server's default latin1_swedish_ci).
         steps = [
             "DROP TABLE IF EXISTS order_address_map;",
             """CREATE TABLE order_address_map (order_id BIGINT PRIMARY KEY, address_id BIGINT NOT NULL) ENGINE=InnoDB;""",
@@ -116,11 +125,11 @@ def build_order_address_map(engine, run):
                 FROM (SELECT order_id, shipping_address AS j FROM orders
                       WHERE shipping_address IS NOT NULL) p
                 JOIN addresses a
-                  ON CONVERT(a.street USING utf8mb4) COLLATE utf8mb4_bin = CONVERT(p.j->>'$.street' USING utf8mb4) COLLATE utf8mb4_bin
-                 AND CONVERT(a.city USING utf8mb4) COLLATE utf8mb4_bin = CONVERT(p.j->>'$.city' USING utf8mb4) COLLATE utf8mb4_bin
-                 AND CONVERT(a.state USING utf8mb4) COLLATE utf8mb4_bin = CONVERT(p.j->>'$.state' USING utf8mb4) COLLATE utf8mb4_bin
-                 AND CONVERT(a.zip USING utf8mb4) COLLATE utf8mb4_bin = CONVERT(p.j->>'$.zip' USING utf8mb4) COLLATE utf8mb4_bin
-                 AND CONVERT(a.country USING utf8mb4) COLLATE utf8mb4_bin = CONVERT(p.j->>'$.country' USING utf8mb4) COLLATE utf8mb4_bin;
+                  ON a.street = CONVERT(p.j->>'$.street' USING latin1) COLLATE latin1_swedish_ci
+                 AND a.city = CONVERT(p.j->>'$.city' USING latin1) COLLATE latin1_swedish_ci
+                 AND a.state = CONVERT(p.j->>'$.state' USING latin1) COLLATE latin1_swedish_ci
+                 AND a.zip = CONVERT(p.j->>'$.zip' USING latin1) COLLATE latin1_swedish_ci
+                 AND a.country = CONVERT(p.j->>'$.country' USING latin1) COLLATE latin1_swedish_ci;
             """,
         ]
     else:  # sqlserver
@@ -323,30 +332,47 @@ def fix_customer_notes(engine, run):
                FOREIGN KEY (customer_id) REFERENCES customers(customer_id);""",
         ]
     elif engine == "mysql":
+        # IMPORTANT: cast cn.customer_id (non-indexed) rather than c.customer_id
+        # (customers' PK). The original version cast c.customer_id, wrapping the
+        # indexed column and making the NOT EXISTS non-sargable -- for 150K
+        # customer_notes rows against 500K customers, MySQL 5.7's optimizer chose
+        # a nested-loop plan that ran for 6+ hours before being killed (unlike
+        # Postgres, whose planner built an efficient hash anti-join despite the
+        # same non-sargable pattern -- a genuine cross-engine optimizer difference).
+        # CAST(... AS UNSIGNED) is safe here even for malformed rows like
+        # 'CUST-1234': MySQL's lenient string-to-number conversion yields 0 for
+        # non-numeric-leading strings, which never matches a real customer_id
+        # (they start at 1), so malformed rows still correctly end up flagged.
         steps = [
             """CREATE TABLE IF NOT EXISTS customer_notes_orphaned_archive LIKE customer_notes;""",
             """INSERT INTO customer_notes_orphaned_archive
                SELECT * FROM customer_notes cn
                WHERE cn.customer_id NOT REGEXP '^[0-9]+$'
-                  OR NOT EXISTS (SELECT 1 FROM customers c WHERE CAST(c.customer_id AS CHAR) = cn.customer_id);""",
+                  OR NOT EXISTS (SELECT 1 FROM customers c WHERE c.customer_id = CAST(cn.customer_id AS UNSIGNED));""",
             """DELETE FROM customer_notes
                WHERE customer_id NOT REGEXP '^[0-9]+$'
-                  OR customer_id NOT IN (SELECT CAST(customer_id AS CHAR) FROM customers);""",
+                  OR NOT EXISTS (SELECT 1 FROM customers c WHERE c.customer_id = CAST(customer_notes.customer_id AS UNSIGNED));""",
             """ALTER TABLE customer_notes MODIFY COLUMN customer_id BIGINT NOT NULL;""",
             """ALTER TABLE customer_notes ADD CONSTRAINT fk_customer_notes_customer
                FOREIGN KEY (customer_id) REFERENCES customers(customer_id);""",
         ]
     else:  # sqlserver
+        # Same fix as MySQL: cast the non-indexed cn.customer_id side, leave
+        # customers.customer_id (PK) bare so the index stays usable. TRY_CAST
+        # (not plain CAST) is required here -- unlike MySQL's lenient conversion,
+        # SQL Server's CAST throws a hard error on non-numeric input like
+        # 'CUST-1234'; TRY_CAST returns NULL instead, which safely never matches
+        # via the equality comparison, correctly leaving malformed rows flagged.
         steps = [
             """IF OBJECT_ID('dbo.customer_notes_orphaned_archive','U') IS NULL
                SELECT * INTO customer_notes_orphaned_archive FROM customer_notes WHERE 1=0;""",
             """INSERT INTO customer_notes_orphaned_archive
                SELECT * FROM customer_notes cn
                WHERE cn.customer_id LIKE '%[^0-9]%'
-                  OR NOT EXISTS (SELECT 1 FROM customers c WHERE CAST(c.customer_id AS NVARCHAR(20)) = cn.customer_id);""",
+                  OR NOT EXISTS (SELECT 1 FROM customers c WHERE c.customer_id = TRY_CAST(cn.customer_id AS BIGINT));""",
             """DELETE FROM customer_notes
                WHERE customer_id LIKE '%[^0-9]%'
-                  OR customer_id NOT IN (SELECT CAST(customer_id AS NVARCHAR(20)) FROM customers);""",
+                  OR NOT EXISTS (SELECT 1 FROM customers c WHERE c.customer_id = TRY_CAST(customer_notes.customer_id AS BIGINT));""",
             """ALTER TABLE customer_notes ALTER COLUMN customer_id BIGINT NOT NULL;""",
             """ALTER TABLE customer_notes ADD CONSTRAINT fk_customer_notes_customer
                FOREIGN KEY (customer_id) REFERENCES customers(customer_id);""",
