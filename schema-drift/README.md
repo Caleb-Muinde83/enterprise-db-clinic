@@ -116,3 +116,72 @@ python validate.py --engine sqlserver
 - The batched backfill completes without a single long-held lock — worth
   timing and comparing against what a single unbatched `UPDATE` would have
   required, as a concrete illustration of why batching matters at scale.
+
+## Results
+
+All three engines completed and validated at full scale (3M orders, 150K
+`customer_notes` rows), with identical starting debt and identical final state:
+
+| Engine | Malformed (before → after) | Orphaned (before → after) | Rows archived | Addresses created | Orders backfilled |
+|---|---|---|---|---|---|
+| PostgreSQL | 7,493 → 0 | 7,544 → 0 | 15,037 | 442,767 | 3,000,000 / 3,000,000 |
+| MySQL | 7,493 → 0 | 7,544 → 0 | 15,037 | 442,767 | 3,000,000 / 3,000,000 |
+| SQL Server | 7,493 → 0 | 7,544 → 0 | 15,037 | 442,767 | 3,000,000 / 3,000,000 |
+
+`customer_id` ends as `BIGINT` (Postgres/MySQL) / `bigint` (SQL Server) with an
+enforced FK on all three engines — a future orphan is now structurally impossible.
+
+**Backfill time, after all fixes were in place:** SQL Server completed the full
+3M-row batched backfill in ~103 seconds across 12 batches, with no stalls. This
+is the number to compare against — Postgres's *first* run took ~3 hours before
+the parse-once fix, and MySQL needed two separate multi-hour kills (collation,
+then the orphan-check) before its own fixes landed. Once corrected, all three
+engines ran the same batched approach quickly; the multi-hour runs were bugs in
+the migration code, not an inherent cost of the batching strategy itself.
+
+## Notable findings
+
+**Cross-engine optimizer difference on a non-sargable comparison.** The orphan
+check in `fix_customer_notes` originally compared `customer_notes.customer_id`
+(non-indexed) against `customers.customer_id` (PK) by wrapping the *indexed*
+side in a cast: `CAST(c.customer_id AS TEXT) = cn.customer_id`. On Postgres,
+this ran fine — the planner still built an efficient hash anti-join despite the
+cast, executing in line with the rest of the migration. The identical pattern on
+MySQL 5.7 caused a catastrophic full nested-loop scan (150K × 500K rows) that
+had to be killed after 6+ hours; MySQL's optimizer, unlike Postgres's, doesn't
+route around a function wrapped on an indexed column. The fix — casting the
+*non-indexed* `customer_notes.customer_id` side instead, using each engine's
+lenient cast (`CAST(... AS UNSIGNED)` in MySQL, `TRY_CAST(... AS BIGINT)` in
+SQL Server, which returns `NULL` instead of erroring on non-numeric input) —
+resolved it everywhere, and is the safer general pattern regardless of engine.
+Postgres's original approach was left as-is rather than "fixed," since it
+already worked and its plain `CAST` fails loudly on bad input, which is arguably
+the safer failure mode there.
+
+**SQL Server's nonclustered index key-length limit.** Building the `addresses`
+table's `uq_address` unique index raised a warning — SQL Server caps
+nonclustered index keys at 1,700 bytes, and the combined address columns can
+reach up to 2,080 bytes in a worst case. It's a warning, not a hard failure:
+the insert still completed with all 442,767 rows, because none of the actual
+generated values in this dataset hit that ceiling. Neither Postgres nor MySQL
+imposes a comparable key-length ceiling on a plain multi-column unique index at
+this scale, so it's a genuine engine-specific constraint worth knowing about
+before designing a composite unique key on wide text columns in SQL Server.
+
+**MySQL JSON extraction returns a different collation than the target table's
+default.** Comparing `JSON_UNQUOTE(JSON_EXTRACT(...))` output (implicitly
+`utf8mb4_bin`) directly against `addresses`' plain `VARCHAR` columns (server
+default `latin1_swedish_ci`) threw an illegal mix-of-collations error. The fix
+had to convert only the JSON-extracted side — converting both sides (the first
+attempt) wrapped the indexed `addresses` columns too, silently turning a fast
+indexed join into a full unindexed nested-loop scan over 3M × 442,767 rows that
+ran 10+ hours before being caught and killed. Same underlying lesson as the
+orphan-check finding above: a fix that "resolves the error" can still destroy
+the query plan if it touches the wrong side of the comparison.
+
+**A repeated pattern across three separate multi-hour stalls this module:**
+wrapping an indexed column in any function or cast — even one that looks
+harmless, like a type cast for a comparison — reliably kills index use, and the
+query still *runs* rather than erroring, so it looks like slow progress instead
+of a bug. `EXPLAIN` (Postgres/MySQL) or `STATISTICS IO` (SQL Server) against the
+real plan, checked before trusting anything at full scale, caught all three.
