@@ -1,0 +1,480 @@
+timestamp,op,latency_ms,error
+2026-09-22T19:48:14.258841+00:00,point_read,1260.7,
+2026-09-22T19:48:15.194320+00:00,scan_read,935.5,
+2026-09-22T19:48:15.607685+00:00,write,413.4,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:16.374632+00:00,scan_read,766.9,
+2026-09-22T19:48:17.661065+00:00,scan_read,1286.4,
+2026-09-22T19:48:18.472638+00:00,point_read,811.6,
+2026-09-22T19:48:19.382365+00:00,point_read,909.7,
+2026-09-22T19:48:19.738157+00:00,point_read,355.8,
+2026-09-22T19:48:20.318912+00:00,scan_read,580.8,
+2026-09-22T19:48:20.559438+00:00,point_read,240.0,
+2026-09-22T19:48:20.816018+00:00,point_read,256.6,
+2026-09-22T19:48:21.044307+00:00,point_read,228.3,
+2026-09-22T19:48:21.289304+00:00,point_read,244.5,
+2026-09-22T19:48:21.629857+00:00,point_read,340.6,
+2026-09-22T19:48:21.872573+00:00,point_read,242.7,
+2026-09-22T19:48:22.114624+00:00,point_read,241.5,
+2026-09-22T19:48:22.405436+00:00,write,290.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:22.713617+00:00,point_read,308.2,
+2026-09-22T19:48:23.124652+00:00,point_read,411.0,
+2026-09-22T19:48:23.718658+00:00,write,594.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:24.699081+00:00,point_read,977.4,
+2026-09-22T19:48:26.310188+00:00,point_read,1611.1,
+2026-09-22T19:48:27.089854+00:00,point_read,779.7,
+2026-09-22T19:48:27.661448+00:00,point_read,571.1,
+2026-09-22T19:48:28.681232+00:00,scan_read,1019.8,
+2026-09-22T19:48:29.055089+00:00,point_read,373.9,
+2026-09-22T19:48:29.373230+00:00,write,318.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:29.868537+00:00,scan_read,494.8,
+2026-09-22T19:48:30.153347+00:00,write,284.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:30.443821+00:00,write,289.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:31.371122+00:00,point_read,927.3,
+2026-09-22T19:48:31.728812+00:00,write,357.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:31.990958+00:00,point_read,262.1,
+2026-09-22T19:48:32.221017+00:00,write,229.5,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:32.501081+00:00,write,280.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:33.429246+00:00,scan_read,928.2,
+2026-09-22T19:48:34.319540+00:00,scan_read,890.3,
+2026-09-22T19:48:35.382657+00:00,scan_read,1063.1,
+2026-09-22T19:48:35.680508+00:00,write,297.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:35.984998+00:00,point_read,304.5,
+2026-09-22T19:48:36.246542+00:00,point_read,261.5,
+2026-09-22T19:48:36.477300+00:00,write,230.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:36.967799+00:00,scan_read,490.5,
+2026-09-22T19:48:37.199419+00:00,write,231.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:37.750963+00:00,scan_read,551.5,
+2026-09-22T19:48:38.034742+00:00,write,283.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:38.271441+00:00,point_read,236.1,
+2026-09-22T19:48:38.530739+00:00,write,259.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:38.774325+00:00,point_read,243.1,
+2026-09-22T19:48:39.009289+00:00,write,234.4,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:39.244534+00:00,point_read,235.2,
+2026-09-22T19:48:39.808199+00:00,scan_read,563.7,
+2026-09-22T19:48:40.031389+00:00,point_read,223.2,
+2026-09-22T19:48:40.368039+00:00,write,336.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:40.645919+00:00,write,277.4,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:41.058050+00:00,scan_read,412.1,
+2026-09-22T19:48:41.286794+00:00,point_read,228.7,
+2026-09-22T19:48:41.514944+00:00,point_read,228.1,
+2026-09-22T19:48:41.821394+00:00,point_read,306.4,
+2026-09-22T19:48:42.046222+00:00,point_read,224.8,
+2026-09-22T19:48:42.276089+00:00,point_read,229.9,
+2026-09-22T19:48:42.553633+00:00,point_read,277.5,
+2026-09-22T19:48:43.020403+00:00,scan_read,466.2,
+2026-09-22T19:48:43.240362+00:00,point_read,220.0,
+2026-09-22T19:48:43.660643+00:00,point_read,419.8,
+2026-09-22T19:48:44.256072+00:00,scan_read,595.4,
+2026-09-22T19:48:44.483149+00:00,point_read,227.1,
+2026-09-22T19:48:44.830659+00:00,point_read,347.5,
+2026-09-22T19:48:45.182342+00:00,point_read,351.7,
+2026-09-22T19:48:45.412243+00:00,point_read,229.9,
+2026-09-22T19:48:45.653911+00:00,write,241.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:45.910786+00:00,write,256.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:46.407987+00:00,scan_read,497.2,
+2026-09-22T19:48:46.921945+00:00,scan_read,514.0,
+2026-09-22T19:48:47.422518+00:00,scan_read,500.6,
+2026-09-22T19:48:47.668115+00:00,point_read,245.6,
+2026-09-22T19:48:47.951557+00:00,point_read,283.4,
+2026-09-22T19:48:48.177553+00:00,point_read,226.0,
+2026-09-22T19:48:48.504787+00:00,point_read,326.7,
+2026-09-22T19:48:48.749170+00:00,point_read,244.4,
+2026-09-22T19:48:49.039263+00:00,point_read,289.6,
+2026-09-22T19:48:49.305565+00:00,point_read,266.3,
+2026-09-22T19:48:49.559006+00:00,point_read,253.4,
+2026-09-22T19:48:49.792313+00:00,write,233.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:50.061866+00:00,point_read,269.6,
+2026-09-22T19:48:50.284560+00:00,point_read,222.7,
+2026-09-22T19:48:50.602024+00:00,point_read,317.5,
+2026-09-22T19:48:50.823543+00:00,point_read,221.5,
+2026-09-22T19:48:51.039013+00:00,write,214.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:51.321681+00:00,write,282.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:51.537585+00:00,write,215.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:51.779502+00:00,write,241.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:52.006767+00:00,write,227.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:52.222085+00:00,point_read,215.3,
+2026-09-22T19:48:52.657759+00:00,scan_read,435.7,
+2026-09-22T19:48:53.093255+00:00,point_read,435.5,
+2026-09-22T19:48:53.511310+00:00,point_read,418.1,
+2026-09-22T19:48:53.791577+00:00,point_read,280.3,
+2026-09-22T19:48:54.065490+00:00,write,273.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:54.589329+00:00,scan_read,523.8,
+2026-09-22T19:48:55.186290+00:00,scan_read,597.0,
+2026-09-22T19:48:55.408105+00:00,point_read,221.8,
+2026-09-22T19:48:55.686980+00:00,point_read,278.3,
+2026-09-22T19:48:55.908260+00:00,write,221.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:56.328732+00:00,scan_read,420.5,
+2026-09-22T19:48:56.551556+00:00,point_read,222.8,
+2026-09-22T19:48:56.782703+00:00,point_read,231.1,
+2026-09-22T19:48:57.045871+00:00,point_read,263.2,
+2026-09-22T19:48:57.316441+00:00,write,270.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:57.567273+00:00,point_read,250.3,
+2026-09-22T19:48:57.912203+00:00,write,344.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:58.144316+00:00,write,232.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:48:58.404102+00:00,point_read,259.8,
+2026-09-22T19:48:58.836746+00:00,scan_read,432.1,
+2026-09-22T19:48:59.078617+00:00,point_read,241.3,
+2026-09-22T19:48:59.559809+00:00,point_read,481.2,
+2026-09-22T19:48:59.828616+00:00,point_read,268.8,
+2026-09-22T19:49:00.174123+00:00,write,345.5,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:00.435062+00:00,point_read,260.9,
+2026-09-22T19:49:00.806027+00:00,point_read,370.4,
+2026-09-22T19:49:01.595179+00:00,scan_read,788.1,
+2026-09-22T19:49:01.941065+00:00,point_read,345.9,
+2026-09-22T19:49:02.299509+00:00,write,357.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:02.859352+00:00,write,559.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:03.204508+00:00,point_read,345.2,
+2026-09-22T19:49:03.606262+00:00,write,401.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:03.991998+00:00,point_read,385.2,
+2026-09-22T19:49:04.680970+00:00,scan_read,689.0,
+2026-09-22T19:49:05.069139+00:00,point_read,388.2,
+2026-09-22T19:49:05.434598+00:00,write,365.5,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:05.807397+00:00,point_read,372.8,
+2026-09-22T19:49:06.250468+00:00,write,443.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:06.723259+00:00,write,472.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:07.321177+00:00,point_read,597.9,
+2026-09-22T19:49:07.757777+00:00,write,436.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:08.243632+00:00,write,485.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:08.636199+00:00,point_read,392.0,
+2026-09-22T19:49:09.606740+00:00,scan_read,970.5,
+2026-09-22T19:49:09.945610+00:00,point_read,338.9,
+2026-09-22T19:49:10.504501+00:00,scan_read,558.4,
+2026-09-22T19:49:10.812356+00:00,point_read,307.9,
+2026-09-22T19:49:11.043666+00:00,write,231.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:11.452960+00:00,point_read,409.3,
+2026-09-22T19:49:11.730360+00:00,point_read,277.4,
+2026-09-22T19:49:12.034733+00:00,point_read,304.4,
+2026-09-22T19:49:12.269310+00:00,point_read,234.6,
+2026-09-22T19:49:12.548767+00:00,write,278.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:12.868631+00:00,point_read,318.9,
+2026-09-22T19:49:13.130752+00:00,write,261.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:13.371591+00:00,point_read,240.8,
+2026-09-22T19:49:13.689281+00:00,point_read,317.7,
+2026-09-22T19:49:13.942687+00:00,point_read,253.4,
+2026-09-22T19:49:14.255401+00:00,write,312.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:14.501138+00:00,point_read,245.7,
+2026-09-22T19:49:14.754680+00:00,point_read,253.5,
+2026-09-22T19:49:15.137273+00:00,point_read,382.6,
+2026-09-22T19:49:15.405090+00:00,point_read,267.3,
+2026-09-22T19:49:15.709652+00:00,point_read,304.6,
+2026-09-22T19:49:16.187286+00:00,scan_read,476.6,
+2026-09-22T19:49:16.417667+00:00,point_read,230.4,
+2026-09-22T19:49:16.786635+00:00,point_read,369.0,
+2026-09-22T19:49:17.817519+00:00,scan_read,1030.9,
+2026-09-22T19:49:19.016691+00:00,scan_read,1199.2,
+2026-09-22T19:49:19.909366+00:00,scan_read,892.7,
+2026-09-22T19:49:20.167582+00:00,point_read,258.0,
+2026-09-22T19:49:20.484755+00:00,write,317.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:20.739183+00:00,write,254.4,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:21.092694+00:00,point_read,353.5,
+2026-09-22T19:49:21.307694+00:00,write,215.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:21.556332+00:00,point_read,248.6,
+2026-09-22T19:49:21.821002+00:00,point_read,264.7,
+2026-09-22T19:49:22.052792+00:00,point_read,231.8,
+2026-09-22T19:49:22.534524+00:00,scan_read,481.7,
+2026-09-22T19:49:23.018354+00:00,scan_read,483.8,
+2026-09-22T19:49:23.525464+00:00,scan_read,507.1,
+2026-09-22T19:49:23.757190+00:00,point_read,231.7,
+2026-09-22T19:49:24.040842+00:00,write,283.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:24.744932+00:00,scan_read,704.1,
+2026-09-22T19:49:25.486954+00:00,scan_read,742.0,
+2026-09-22T19:49:25.804264+00:00,write,317.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:26.227797+00:00,point_read,423.0,
+2026-09-22T19:49:26.542388+00:00,write,314.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:26.963938+00:00,write,421.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:27.624412+00:00,scan_read,660.5,
+2026-09-22T19:49:27.923317+00:00,point_read,298.9,
+2026-09-22T19:49:28.180589+00:00,point_read,257.3,
+2026-09-22T19:49:28.484700+00:00,write,304.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:28.923136+00:00,write,438.4,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:29.303752+00:00,point_read,378.9,
+2026-09-22T19:49:29.621824+00:00,point_read,318.1,
+2026-09-22T19:49:29.957215+00:00,write,335.4,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:30.300577+00:00,point_read,343.4,
+2026-09-22T19:49:30.868900+00:00,write,568.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:31.271200+00:00,point_read,402.3,
+2026-09-22T19:49:31.946924+00:00,scan_read,675.7,
+2026-09-22T19:49:32.293232+00:00,point_read,345.8,
+2026-09-22T19:49:32.653147+00:00,point_read,359.9,
+2026-09-22T19:49:33.056962+00:00,point_read,403.8,
+2026-09-22T19:49:33.399572+00:00,write,342.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:34.093768+00:00,scan_read,694.2,
+2026-09-22T19:49:34.688269+00:00,scan_read,594.5,
+2026-09-22T19:49:35.427600+00:00,scan_read,739.3,
+2026-09-22T19:49:35.650659+00:00,point_read,222.5,
+2026-09-22T19:49:35.950154+00:00,point_read,299.5,
+2026-09-22T19:49:36.172231+00:00,point_read,222.1,
+2026-09-22T19:49:36.434509+00:00,write,261.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:36.655740+00:00,point_read,221.2,
+2026-09-22T19:49:36.876831+00:00,point_read,221.1,
+2026-09-22T19:49:37.380001+00:00,scan_read,502.2,
+2026-09-22T19:49:37.601451+00:00,write,221.4,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:37.835906+00:00,point_read,234.5,
+2026-09-22T19:49:38.127204+00:00,write,291.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:38.351872+00:00,point_read,224.1,
+2026-09-22T19:49:38.588870+00:00,write,237.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:39.006028+00:00,scan_read,417.2,
+2026-09-22T19:49:39.223026+00:00,write,217.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:39.691176+00:00,scan_read,467.6,
+2026-09-22T19:49:39.914174+00:00,write,223.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:40.176645+00:00,point_read,261.9,
+2026-09-22T19:49:40.421909+00:00,point_read,245.1,
+2026-09-22T19:49:40.675326+00:00,point_read,253.4,
+2026-09-22T19:49:40.908120+00:00,write,232.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:41.444321+00:00,scan_read,536.2,
+2026-09-22T19:49:41.886274+00:00,point_read,442.0,
+2026-09-22T19:49:42.141495+00:00,point_read,254.7,
+2026-09-22T19:49:42.427991+00:00,point_read,286.5,
+2026-09-22T19:49:42.947317+00:00,scan_read,519.3,
+2026-09-22T19:49:43.371185+00:00,scan_read,423.9,
+2026-09-22T19:49:43.610614+00:00,point_read,239.4,
+2026-09-22T19:49:44.085585+00:00,scan_read,475.0,
+2026-09-22T19:49:44.307538+00:00,write,222.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:44.568308+00:00,write,260.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:44.803151+00:00,write,234.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:45.336068+00:00,scan_read,532.4,
+2026-09-22T19:49:45.559042+00:00,write,223.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:45.821215+00:00,point_read,262.2,
+2026-09-22T19:49:46.300069+00:00,scan_read,478.9,
+2026-09-22T19:49:46.537012+00:00,point_read,236.9,
+2026-09-22T19:49:46.853724+00:00,point_read,316.7,
+2026-09-22T19:49:47.082661+00:00,point_read,228.9,
+2026-09-22T19:49:47.328229+00:00,point_read,245.6,
+2026-09-22T19:49:47.549368+00:00,point_read,221.1,
+2026-09-22T19:49:47.800678+00:00,point_read,250.8,
+2026-09-22T19:49:48.036993+00:00,point_read,236.3,
+2026-09-22T19:49:48.331514+00:00,write,294.5,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:48.562767+00:00,point_read,231.3,
+2026-09-22T19:49:48.789461+00:00,point_read,226.2,
+2026-09-22T19:49:49.300669+00:00,scan_read,511.2,
+2026-09-22T19:49:49.520234+00:00,write,219.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:49.745118+00:00,point_read,224.9,
+2026-09-22T19:49:49.973094+00:00,point_read,228.0,
+2026-09-22T19:49:50.212695+00:00,point_read,239.6,
+2026-09-22T19:49:50.516061+00:00,point_read,303.4,
+2026-09-22T19:49:50.755923+00:00,point_read,239.9,
+2026-09-22T19:49:51.002912+00:00,write,247.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:51.506113+00:00,scan_read,503.2,
+2026-09-22T19:49:51.742627+00:00,write,236.5,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:52.070353+00:00,write,327.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:52.314541+00:00,point_read,244.2,
+2026-09-22T19:49:52.572716+00:00,point_read,258.2,
+2026-09-22T19:49:52.859746+00:00,write,287.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:53.368298+00:00,scan_read,508.6,
+2026-09-22T19:49:53.629051+00:00,write,260.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:53.888443+00:00,point_read,258.9,
+2026-09-22T19:49:54.125981+00:00,point_read,237.5,
+2026-09-22T19:49:54.357171+00:00,point_read,231.2,
+2026-09-22T19:49:54.636349+00:00,point_read,279.2,
+2026-09-22T19:49:54.979877+00:00,write,343.5,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:55.362391+00:00,write,381.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:55.690687+00:00,point_read,327.8,
+2026-09-22T19:49:56.280629+00:00,point_read,589.9,
+2026-09-22T19:49:56.887296+00:00,scan_read,606.7,
+2026-09-22T19:49:57.240096+00:00,point_read,352.8,
+2026-09-22T19:49:57.494719+00:00,point_read,254.6,
+2026-09-22T19:49:57.832451+00:00,write,337.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:58.090701+00:00,point_read,257.7,
+2026-09-22T19:49:58.326855+00:00,write,236.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:49:58.569828+00:00,point_read,242.4,
+2026-09-22T19:49:58.832334+00:00,point_read,262.0,
+2026-09-22T19:49:59.366131+00:00,scan_read,533.8,
+2026-09-22T19:49:59.860845+00:00,scan_read,494.7,
+2026-09-22T19:50:00.151782+00:00,point_read,290.9,
+2026-09-22T19:50:00.389541+00:00,point_read,237.8,
+2026-09-22T19:50:00.617149+00:00,point_read,227.6,
+2026-09-22T19:50:00.864426+00:00,write,247.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:01.401153+00:00,scan_read,536.7,
+2026-09-22T19:50:01.705057+00:00,point_read,303.9,
+2026-09-22T19:50:02.250797+00:00,scan_read,545.7,
+2026-09-22T19:50:02.710717+00:00,scan_read,459.9,
+2026-09-22T19:50:02.952673+00:00,point_read,242.0,
+2026-09-22T19:50:03.197066+00:00,point_read,244.4,
+2026-09-22T19:50:03.438391+00:00,write,241.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:03.760291+00:00,point_read,321.9,
+2026-09-22T19:50:04.223605+00:00,scan_read,463.3,
+2026-09-22T19:50:04.508119+00:00,point_read,284.5,
+2026-09-22T19:50:04.766440+00:00,point_read,258.3,
+2026-09-22T19:50:05.024519+00:00,point_read,258.1,
+2026-09-22T19:50:05.347709+00:00,write,323.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:05.822972+00:00,scan_read,475.3,
+2026-09-22T19:50:06.268932+00:00,scan_read,446.0,
+2026-09-22T19:50:06.597097+00:00,write,327.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:06.858217+00:00,point_read,261.1,
+2026-09-22T19:50:07.088359+00:00,point_read,230.1,
+2026-09-22T19:50:07.372813+00:00,point_read,284.5,
+2026-09-22T19:50:07.818220+00:00,scan_read,445.4,
+2026-09-22T19:50:08.281181+00:00,scan_read,463.0,
+2026-09-22T19:50:08.753177+00:00,scan_read,472.0,
+2026-09-22T19:50:08.981934+00:00,point_read,228.8,
+2026-09-22T19:50:09.207985+00:00,point_read,226.1,
+2026-09-22T19:50:09.445469+00:00,write,237.5,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:09.856379+00:00,scan_read,410.4,
+2026-09-22T19:50:10.330968+00:00,scan_read,474.6,
+2026-09-22T19:50:10.550551+00:00,point_read,219.6,
+2026-09-22T19:50:10.771711+00:00,write,221.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:11.051428+00:00,write,279.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:11.279425+00:00,point_read,227.5,
+2026-09-22T19:50:11.744260+00:00,scan_read,464.3,
+2026-09-22T19:50:11.991150+00:00,point_read,246.9,
+2026-09-22T19:50:12.209823+00:00,point_read,218.7,
+2026-09-22T19:50:12.723167+00:00,scan_read,513.3,
+2026-09-22T19:50:12.942030+00:00,point_read,218.9,
+2026-09-22T19:50:13.221017+00:00,write,279.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:13.450887+00:00,point_read,229.9,
+2026-09-22T19:50:13.880174+00:00,scan_read,429.3,
+2026-09-22T19:50:14.110451+00:00,write,229.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:14.337552+00:00,point_read,227.1,
+2026-09-22T19:50:14.616160+00:00,point_read,278.6,
+2026-09-22T19:50:15.097695+00:00,scan_read,481.5,
+2026-09-22T19:50:15.420710+00:00,write,323.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:15.646690+00:00,point_read,226.0,
+2026-09-22T19:50:16.068199+00:00,scan_read,421.5,
+2026-09-22T19:50:16.573751+00:00,scan_read,505.6,
+2026-09-22T19:50:17.008845+00:00,point_read,434.5,
+2026-09-22T19:50:17.393821+00:00,write,385.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:18.058327+00:00,scan_read,664.5,
+2026-09-22T19:50:18.302549+00:00,point_read,244.2,
+2026-09-22T19:50:18.522496+00:00,write,219.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:19.016392+00:00,scan_read,493.4,
+2026-09-22T19:50:19.255266+00:00,write,238.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:19.730615+00:00,scan_read,475.3,
+2026-09-22T19:50:20.189048+00:00,scan_read,458.4,
+2026-09-22T19:50:20.453223+00:00,point_read,264.2,
+2026-09-22T19:50:20.924945+00:00,scan_read,471.2,
+2026-09-22T19:50:21.242948+00:00,write,318.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:21.484948+00:00,point_read,242.0,
+2026-09-22T19:50:22.078364+00:00,point_read,593.4,
+2026-09-22T19:50:22.602818+00:00,scan_read,524.5,
+2026-09-22T19:50:22.856622+00:00,point_read,253.8,
+2026-09-22T19:50:23.124279+00:00,point_read,267.7,
+2026-09-22T19:50:23.652613+00:00,scan_read,528.3,
+2026-09-22T19:50:23.926803+00:00,point_read,274.2,
+2026-09-22T19:50:24.426854+00:00,scan_read,500.1,
+2026-09-22T19:50:24.676612+00:00,write,249.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:24.928762+00:00,point_read,252.2,
+2026-09-22T19:50:25.278504+00:00,write,349.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:25.605244+00:00,point_read,326.7,
+2026-09-22T19:50:25.847421+00:00,write,242.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:26.308439+00:00,scan_read,461.0,
+2026-09-22T19:50:26.626325+00:00,point_read,317.9,
+2026-09-22T19:50:26.870127+00:00,point_read,243.8,
+2026-09-22T19:50:27.358168+00:00,scan_read,487.5,
+2026-09-22T19:50:27.626628+00:00,write,267.4,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:28.187542+00:00,scan_read,559.9,
+2026-09-22T19:50:28.505844+00:00,write,318.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:28.835810+00:00,point_read,329.0,
+2026-09-22T19:50:29.124721+00:00,write,288.4,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:29.565385+00:00,point_read,440.1,
+2026-09-22T19:50:30.101596+00:00,point_read,536.2,
+2026-09-22T19:50:30.486687+00:00,point_read,385.1,
+2026-09-22T19:50:31.636189+00:00,scan_read,1149.5,
+2026-09-22T19:50:32.372782+00:00,scan_read,736.6,
+2026-09-22T19:50:33.276339+00:00,scan_read,903.6,
+2026-09-22T19:50:34.033526+00:00,write,756.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:34.287881+00:00,point_read,254.4,
+2026-09-22T19:50:34.657443+00:00,point_read,369.0,
+2026-09-22T19:50:34.933011+00:00,point_read,275.6,
+2026-09-22T19:50:35.430690+00:00,write,497.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:35.763448+00:00,point_read,332.8,
+2026-09-22T19:50:36.616679+00:00,scan_read,853.2,
+2026-09-22T19:50:37.135887+00:00,write,519.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:38.038317+00:00,point_read,901.9,
+2026-09-22T19:50:38.842786+00:00,write,804.5,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:39.336177+00:00,point_read,493.4,
+2026-09-22T19:50:39.839702+00:00,point_read,503.0,
+2026-09-22T19:50:40.625063+00:00,scan_read,785.4,
+2026-09-22T19:50:41.162194+00:00,write,537.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:41.533762+00:00,point_read,371.3,
+2026-09-22T19:50:41.951792+00:00,point_read,418.0,
+2026-09-22T19:50:42.277591+00:00,point_read,325.8,
+2026-09-22T19:50:42.895271+00:00,scan_read,617.7,
+2026-09-22T19:50:43.519183+00:00,scan_read,623.9,
+2026-09-22T19:50:44.074781+00:00,scan_read,555.6,
+2026-09-22T19:50:44.303841+00:00,point_read,229.1,
+2026-09-22T19:50:44.530948+00:00,point_read,227.1,
+2026-09-22T19:50:44.806647+00:00,point_read,275.7,
+2026-09-22T19:50:45.455142+00:00,scan_read,648.5,
+2026-09-22T19:50:45.746114+00:00,point_read,291.0,
+2026-09-22T19:50:45.991640+00:00,point_read,245.0,
+2026-09-22T19:50:46.439928+00:00,scan_read,448.3,
+2026-09-22T19:50:46.712216+00:00,point_read,272.3,
+2026-09-22T19:50:47.000068+00:00,write,287.3,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:47.246273+00:00,point_read,245.7,
+2026-09-22T19:50:47.488486+00:00,point_read,242.2,
+2026-09-22T19:50:47.760346+00:00,point_read,271.9,
+2026-09-22T19:50:48.034824+00:00,point_read,274.5,
+2026-09-22T19:50:48.263399+00:00,point_read,228.6,
+2026-09-22T19:50:48.536619+00:00,point_read,273.2,
+2026-09-22T19:50:48.780454+00:00,point_read,243.3,
+2026-09-22T19:50:49.047271+00:00,write,266.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:49.273072+00:00,write,225.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:49.506738+00:00,write,233.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:49.784716+00:00,write,278.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:50.049395+00:00,write,264.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:50.286337+00:00,write,236.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:50.539812+00:00,point_read,253.5,
+2026-09-22T19:50:50.993370+00:00,scan_read,453.6,
+2026-09-22T19:50:51.253358+00:00,write,260.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:51.485475+00:00,write,232.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:51.770498+00:00,point_read,285.0,
+2026-09-22T19:50:52.425834+00:00,point_read,655.3,
+2026-09-22T19:50:52.975262+00:00,scan_read,549.4,
+2026-09-22T19:50:53.448272+00:00,scan_read,473.0,
+2026-09-22T19:50:53.751991+00:00,point_read,303.7,
+2026-09-22T19:50:54.030586+00:00,write,278.0,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:54.292577+00:00,point_read,261.5,
+2026-09-22T19:50:54.690487+00:00,point_read,397.9,
+2026-09-22T19:50:54.951015+00:00,write,260.5,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:55.311424+00:00,point_read,359.9,
+2026-09-22T19:50:55.770656+00:00,scan_read,459.2,
+2026-09-22T19:50:56.022473+00:00,point_read,251.8,
+2026-09-22T19:50:56.488875+00:00,scan_read,466.4,
+2026-09-22T19:50:57.085384+00:00,scan_read,596.5,
+2026-09-22T19:50:57.648435+00:00,scan_read,563.1,
+2026-09-22T19:50:57.958013+00:00,write,309.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:50:58.209744+00:00,point_read,251.7,
+2026-09-22T19:50:58.684063+00:00,scan_read,474.3,
+2026-09-22T19:50:59.343386+00:00,scan_read,659.3,
+2026-09-22T19:50:59.595340+00:00,point_read,252.0,
+2026-09-22T19:50:59.840523+00:00,point_read,245.2,
+2026-09-22T19:51:00.105410+00:00,write,264.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:00.364320+00:00,point_read,258.9,
+2026-09-22T19:51:00.615891+00:00,point_read,251.5,
+2026-09-22T19:51:00.860836+00:00,write,244.9,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:01.185598+00:00,write,324.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:01.675579+00:00,scan_read,489.4,
+2026-09-22T19:51:01.935587+00:00,write,259.5,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:02.202417+00:00,point_read,266.8,
+2026-09-22T19:51:02.456836+00:00,point_read,254.4,
+2026-09-22T19:51:02.804842+00:00,point_read,348.0,
+2026-09-22T19:51:03.335079+00:00,scan_read,530.2,
+2026-09-22T19:51:03.659592+00:00,point_read,324.5,
+2026-09-22T19:51:04.207499+00:00,scan_read,547.9,
+2026-09-22T19:51:04.543038+00:00,point_read,335.5,
+2026-09-22T19:51:04.795614+00:00,point_read,252.6,
+2026-09-22T19:51:05.118785+00:00,write,323.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:05.597968+00:00,write,478.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:05.998257+00:00,point_read,398.7,
+2026-09-22T19:51:06.289205+00:00,point_read,290.9,
+2026-09-22T19:51:06.558421+00:00,point_read,269.2,
+2026-09-22T19:51:06.828128+00:00,write,269.2,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:07.083069+00:00,write,254.4,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:07.365754+00:00,write,282.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:07.610424+00:00,write,244.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:07.980164+00:00,write,369.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:08.443568+00:00,scan_read,463.2,
+2026-09-22T19:51:08.673102+00:00,point_read,229.5,
+2026-09-22T19:51:08.927202+00:00,write,254.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:09.202784+00:00,write,275.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:09.432120+00:00,point_read,229.3,
+2026-09-22T19:51:09.702822+00:00,point_read,270.7,
+2026-09-22T19:51:10.300430+00:00,scan_read,597.6,
+2026-09-22T19:51:10.551121+00:00,write,250.7,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:11.054002+00:00,scan_read,502.9,
+2026-09-22T19:51:11.333146+00:00,write,279.1,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:11.615402+00:00,point_read,282.3,
+2026-09-22T19:51:11.904548+00:00,write,288.6,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:12.159374+00:00,write,254.8,"ERROR:  column ""method"" of relation ""payments"" does not exist LINE 1: ...RT INTO payments (order_id, payment_date, amount, method, st...                                                              ^"
+2026-09-22T19:51:12.732105+00:00,scan_read,571.7,
+2026-09-22T19:51:13.043382+00:00,point_read,311.3,
