@@ -100,7 +100,6 @@ python benchmark.py --report
 - Query 8 (duplicate detection) finds the redundant index by comparing key-column
   prefixes across indexes on the same table — a real technique, not a canned answer.
 - Note the write-overhead trade-off of every new index added, not just the read win.
-
 ## Results
 
 All three engines validated with real mechanism-level evidence (wall-clock timing
