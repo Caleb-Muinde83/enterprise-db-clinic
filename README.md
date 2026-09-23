@@ -15,7 +15,7 @@ Full curriculum and module specs: [`docs/curriculum.md`](docs/curriculum.md)
 | 1 | [Unpartitioned tables at scale](partitioning/README.md) | ✅ complete |
 | 2 | [Missing / incorrect indexing](indexing/README.md) | ✅ complete |
 | 3 | [Schema drift / normalization debt](schema-drift/README.md) | ✅ complete |
-| 4 | Zero-downtime migration (all 3 engines) | ⏳ not started |
+| 4 | [Zero-downtime migration](zero-downtime/README.md) | ✅ complete |
 | 5 | Deprecated version migration (run last) | ⏳ not started |
 | 6 | Cross-engine comparison (Oracle, MongoDB) | ⏳ not started |
 

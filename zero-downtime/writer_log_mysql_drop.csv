@@ -1,0 +1,51 @@
+timestamp,op,latency_ms,error
+2026-09-23T05:39:52.361248+00:00,scan_read,4089.1,
+2026-09-23T05:39:53.804750+00:00,point_read,1371.6,
+2026-09-23T05:39:56.664752+00:00,point_read,2860.0,
+2026-09-23T05:39:59.326699+00:00,scan_read,2636.3,
+2026-09-23T05:39:59.791860+00:00,write,463.6,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value
+2026-09-23T05:40:00.486302+00:00,write,694.4,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value
+2026-09-23T05:40:01.567030+00:00,point_read,1080.2,
+2026-09-23T05:40:02.213558+00:00,point_read,646.5,
+2026-09-23T05:40:02.686132+00:00,point_read,434.9,
+2026-09-23T05:40:03.436124+00:00,point_read,750.0,
+2026-09-23T05:40:04.261317+00:00,point_read,825.2,
+2026-09-23T05:40:08.647404+00:00,scan_read,4384.6,
+2026-09-23T05:40:11.005086+00:00,point_read,2353.0,
+2026-09-23T05:40:13.857009+00:00,scan_read,2845.6,
+2026-09-23T05:40:17.745968+00:00,scan_read,3888.5,
+2026-09-23T05:40:18.668302+00:00,point_read,921.8,
+2026-09-23T05:40:21.433224+00:00,scan_read,2764.9,
+2026-09-23T05:40:22.065005+00:00,write,631.3,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value
+2026-09-23T05:40:22.668322+00:00,write,602.2,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value
+2026-09-23T05:40:23.035460+00:00,point_read,367.1,
+2026-09-23T05:40:23.483560+00:00,point_read,448.1,
+2026-09-23T05:40:26.653085+00:00,scan_read,3169.5,
+2026-09-23T05:40:27.415389+00:00,point_read,760.9,
+2026-09-23T05:40:27.858630+00:00,write,443.2,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value
+2026-09-23T05:40:28.326860+00:00,point_read,467.7,
+2026-09-23T05:40:28.821981+00:00,point_read,495.1,
+2026-09-23T05:40:29.818475+00:00,point_read,996.5,
+2026-09-23T05:40:30.167787+00:00,point_read,348.8,
+2026-09-23T05:40:30.565899+00:00,point_read,398.1,
+2026-09-23T05:40:30.946073+00:00,point_read,380.2,
+2026-09-23T05:40:31.281155+00:00,write,335.1,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value
+2026-09-23T05:40:31.617837+00:00,write,336.1,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value
+2026-09-23T05:40:32.827694+00:00,scan_read,1209.9,
+2026-09-23T05:40:33.165743+00:00,point_read,338.0,
+2026-09-23T05:40:33.611486+00:00,point_read,445.2,
+2026-09-23T05:40:34.456782+00:00,point_read,845.3,
+2026-09-23T05:40:37.157929+00:00,scan_read,2701.1,
+2026-09-23T05:40:37.658876+00:00,point_read,500.4,
+2026-09-23T05:40:39.965612+00:00,scan_read,2306.7,
+2026-09-23T05:40:40.285057+00:00,write,319.4,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value
+2026-09-23T05:40:40.643610+00:00,write,358.0,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value
+2026-09-23T05:40:40.982193+00:00,point_read,338.6,
+2026-09-23T05:40:41.413781+00:00,point_read,431.6,
+2026-09-23T05:40:42.589195+00:00,scan_read,1175.4,
+2026-09-23T05:40:43.096926+00:00,point_read,507.7,
+2026-09-23T05:40:44.185411+00:00,point_read,1087.0,
+2026-09-23T05:40:46.056962+00:00,point_read,1871.6,
+2026-09-23T05:40:47.182278+00:00,write,1125.3,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value
+2026-09-23T05:40:48.208941+00:00,point_read,1022.0,
+2026-09-23T05:40:48.960261+00:00,write,751.3,mysql: [Warning] Using a password on the command line interface can be insecure. ERROR 1364 (HY000) at line 1: Field 'method' doesn't have a default value

@@ -39,6 +39,18 @@ def run_mysql(sql):
     )
 
 
+def run_mysql_script(sql_script):
+    """For multi-statement bodies (trigger definitions) that need a DELIMITER
+    change -- mysql -e sends the whole string as one statement, so semicolons
+    INSIDE a BEGIN...END body terminate it early. Piping via stdin lets the
+    client honor DELIMITER the way an interactive session or a .sql file
+    would."""
+    return subprocess.run(
+        ["docker", "exec", "-i", "clinic_mysql_old", "mysql", "-u", "clinic", "-pclinic", "clinic"],
+        input=sql_script, capture_output=True, text=True,
+    )
+
+
 def run_sqlserver(sql):
     return subprocess.run(
         ["docker", "exec", "-i", "clinic_mssql_old", "/opt/mssql-tools/bin/sqlcmd",
@@ -177,29 +189,33 @@ def create_sync_trigger(engine, run):
                FOR EACH ROW EXECUTE FUNCTION payments_sync_method_id();""",
         ]
     elif engine == "mysql":
-        # MySQL requires separate triggers per event (no combined INSERT OR UPDATE).
-        steps = [
-            "DROP TRIGGER IF EXISTS trg_payments_sync_method_id_ins;",
-            """CREATE TRIGGER trg_payments_sync_method_id_ins BEFORE INSERT ON payments
-               FOR EACH ROW
-               BEGIN
-                   IF NEW.payment_method_id IS NULL THEN
-                       SET NEW.payment_method_id = (
-                           SELECT payment_method_id FROM payment_methods
-                           WHERE method_name = NEW.method LIMIT 1);
-                   END IF;
-               END;""",
-            "DROP TRIGGER IF EXISTS trg_payments_sync_method_id_upd;",
-            """CREATE TRIGGER trg_payments_sync_method_id_upd BEFORE UPDATE ON payments
-               FOR EACH ROW
-               BEGIN
-                   IF NEW.payment_method_id IS NULL THEN
-                       SET NEW.payment_method_id = (
-                           SELECT payment_method_id FROM payment_methods
-                           WHERE method_name = NEW.method LIMIT 1);
-                   END IF;
-               END;""",
-        ]
+        # DELIMITER change requires a piped script, not -e -- see run_mysql_script.
+        script = """
+DELIMITER $$
+DROP TRIGGER IF EXISTS trg_payments_sync_method_id_ins$$
+CREATE TRIGGER trg_payments_sync_method_id_ins BEFORE INSERT ON payments
+FOR EACH ROW
+BEGIN
+    IF NEW.payment_method_id IS NULL THEN
+        SET NEW.payment_method_id = (
+            SELECT payment_method_id FROM payment_methods
+            WHERE method_name = NEW.method LIMIT 1);
+    END IF;
+END$$
+DROP TRIGGER IF EXISTS trg_payments_sync_method_id_upd$$
+CREATE TRIGGER trg_payments_sync_method_id_upd BEFORE UPDATE ON payments
+FOR EACH ROW
+BEGIN
+    IF NEW.payment_method_id IS NULL THEN
+        SET NEW.payment_method_id = (
+            SELECT payment_method_id FROM payment_methods
+            WHERE method_name = NEW.method LIMIT 1);
+    END IF;
+END$$
+DELIMITER ;
+"""
+        check(run_mysql_script(script), "create_sync_trigger (mysql, piped script)")
+        return
     else:
         # SQL Server triggers are AFTER-only here (no BEFORE); update via the
         # `inserted` pseudo-table, restricted to rows still NULL to stay cheap.

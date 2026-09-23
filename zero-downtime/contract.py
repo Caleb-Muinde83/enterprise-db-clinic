@@ -215,14 +215,53 @@ def add_and_validate_fk(engine, run):
             "WITH CHECK CHECK CONSTRAINT (slower -- blocking behavior UNVERIFIED, this run is the test)", run,
             "ALTER TABLE payments WITH CHECK CHECK CONSTRAINT fk_payments_payment_method;",
         )
-    else:  # mysql -- no two-phase equivalent, see README
+    else:  # mysql -- corrected: ALGORITHM=INPLACE for ADD FOREIGN KEY refuses to run
+        # with foreign_key_checks ON (validating existing data isn't supported as
+        # part of an in-place, non-rebuilding DDL on this engine -- confirmed via
+        # ERROR 1846 on a real run, not assumed from docs). The actual fast/
+        # non-blocking path is to skip validation entirely with
+        # foreign_key_checks=OFF, which is a MORE extreme version of Postgres's
+        # NOT VALID / SQL Server's WITH NOCHECK -- except MySQL has no built-in
+        # VALIDATE CONSTRAINT equivalent afterward. If you want that same
+        # assurance here, you have to write and run the check yourself, which
+        # verify_no_orphans_mysql below does. SET and ALTER stay in the same -e
+        # call deliberately: each run() call is a fresh mysql connection, and
+        # foreign_key_checks is session-scoped, so splitting them across two
+        # separate calls would silently lose the OFF setting before the ALTER ran.
         timed_step(
-            "ALGORITHM=INPLACE ADD FOREIGN KEY (single step -- validates inline, no unvalidated phase on this engine)", run,
-            """ALTER TABLE payments
+            "SET foreign_key_checks=0 + ADD FOREIGN KEY ALGORITHM=INPLACE (skips validation -- see comment above)", run,
+            """SET foreign_key_checks=0;
+               ALTER TABLE payments
                ADD CONSTRAINT fk_payments_payment_method
                FOREIGN KEY (payment_method_id) REFERENCES payment_methods(payment_method_id),
-               ALGORITHM=INPLACE, LOCK=NONE;""",
+               ALGORITHM=INPLACE, LOCK=NONE;
+               SET foreign_key_checks=1;""",
         )
+        verify_no_orphans_mysql(run)
+
+
+def verify_no_orphans_mysql(run):
+    """MySQL has no native VALIDATE CONSTRAINT / CHECK CONSTRAINT step -- once
+    the FK is added with foreign_key_checks=OFF, existing-data validation
+    never happens unless something does it explicitly. This is that something.
+    Not a formality: without this, an ADD CONSTRAINT with checks off would
+    silently succeed even over orphaned/inconsistent data, unlike Postgres or
+    SQL Server where the later VALIDATE/CHECK step would catch it."""
+    print("MySQL has no built-in constraint validation step -- verifying manually...")
+    orphans = count(run, """
+        SELECT COUNT(*) FROM payments p
+        LEFT JOIN payment_methods pm ON p.payment_method_id = pm.payment_method_id
+        WHERE pm.payment_method_id IS NULL;
+    """)
+    if orphans > 0:
+        print(f"WARNING: {orphans} payments rows reference a payment_method_id with no "
+              f"matching row in payment_methods. The FK constraint now exists but was "
+              f"added without validation (foreign_key_checks was OFF) -- it will not catch "
+              f"this on existing rows, only prevent NEW violations going forward. Fix these "
+              f"rows before treating this migration as complete.", file=sys.stderr)
+    else:
+        print(f"Verified: 0 orphaned payment_method_id values. FK is trustworthy even "
+              f"though MySQL added it without built-in validation.")
 
 
 def enforce_not_null(engine, run):
@@ -235,11 +274,49 @@ def enforce_not_null(engine, run):
     timed_step("Enforce NOT NULL on payment_method_id", run, sql)
 
 
+def relax_old_column(engine, run):
+    """MUST run before the actual DROP. Discovered via a real failed run: a
+    writer that has fully cut over (omits `method` from its INSERT entirely)
+    was still hitting 'doesn't have a default value' errors for the whole
+    ~265s MySQL drop took, because `method` was NOT NULL with no default
+    from the original schema -- simply existing as a required column was
+    enough to break a cutover writer, independent of whether the drop itself
+    was in progress. A hard switch from 'everyone writes method' to
+    'everyone writes payment_method_id' doesn't work; there has to be a
+    transition window where the old column stops being required so both
+    writer styles can succeed at once. This is the contract-side mirror of
+    the expand-phase trigger fix: that one closed a gap for new writes on
+    the new column, this one closes a gap for new writes on the old one.
+
+    IMPORTANT, found on the SECOND real run of this fix: on MySQL 5.7, this
+    ALTER is itself NOT a fast metadata change -- bracketed via writer error
+    timestamps at ~229s, the same order of cost as SET NOT NULL (measured
+    243s). InnoDB 5.7 apparently rewrites the table either direction for a
+    nullability change; true instant nullability changes are 8.0.12+ only.
+    So relaxing before dropping is still the right pattern (confirmed: once
+    it completed, the following 246.9s drop ran with 0 errors against a
+    cut-over writer) -- but on this engine/version it does NOT make the
+    transition gap-free, only shifts where the multi-minute error window
+    sits. A genuinely gap-free cutover on MySQL 5.7 would need dual-writing
+    both columns during the transition instead of relying on this being
+    cheap. This step is timed for exactly that reason -- don't lose that
+    signal by reverting to an untimed print+check."""
+    print("Relaxing old `method` column (NULL, no default requirement) before dropping it...")
+    if engine == "postgres":
+        sql = "ALTER TABLE payments ALTER COLUMN method DROP NOT NULL;"
+    elif engine == "mysql":
+        sql = "ALTER TABLE payments MODIFY method VARCHAR(20) NULL;"
+    else:
+        sql = "ALTER TABLE payments ALTER COLUMN method VARCHAR(20) NULL;"
+    timed_step("Relax old method column (NOT NULL -> nullable)", run, sql)
+
+
 def drop_method_column(engine, run):
     if not method_column_exists(engine, run):
         print("method column already gone, skipping.")
         return
     drop_sync_trigger(engine, run)
+    relax_old_column(engine, run)
     timed_step("Drop old method column", run, "ALTER TABLE payments DROP COLUMN method;")
 
 
