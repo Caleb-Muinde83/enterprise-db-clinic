@@ -16,7 +16,7 @@ Full curriculum and module specs: [`docs/curriculum.md`](docs/curriculum.md)
 | 2 | [Missing / incorrect indexing](indexing/README.md) | ✅ complete |
 | 3 | [Schema drift / normalization debt](schema-drift/README.md) | ✅ complete |
 | 4 | [Zero-downtime migration](zero-downtime/README.md) | ✅ complete |
-| 5 | Deprecated version migration (run last) | ⏳ not started |
+| 5 | [Deprecated version migration](version-migration/README.md) (run last) | 🚧 in progress |
 | 6 | Cross-engine comparison (Oracle, MongoDB) | ⏳ not started |
 
 Version migration runs last on purpose — it has to migrate a schema that already carries
