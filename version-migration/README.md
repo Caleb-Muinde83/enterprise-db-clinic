@@ -150,15 +150,30 @@ Both fixed; the table above reflects the corrected, re-verified run.
   visibly different row order.
 - **SQL Server keeps the old compatibility level (140) after restoring into
   2022** rather than auto-upgrading to 160 (deliberate Microsoft behavior,
-  avoids silently changing query plans on upgrade). Same query, compat 140
-  vs. explicitly bumped to 160 — show what, if anything, changes.
+  avoids silently changing query plans on upgrade). **Confirmed**: the
+  first post-restore check read `compatibility_level = 140` — the original
+  2017 setting, not auto-upgraded. Bumping to 160 explicitly did change the
+  plan (a `Worktable` scan appeared that wasn't there at 140), confirming
+  the compatibility level genuinely affects the optimizer's behavior, not
+  just a cosmetic setting. (Note: this probe isn't side-effect-free — the
+  `ALTER DATABASE` it runs persists, so a second run of this script no
+  longer sees the original 140 baseline, only 160.)
 - **SQL Server's deprecated-feature usage counters**
   (`sys.dm_os_performance_counters`, object `SQLServer:Deprecated
   Features`) only increment when a deprecated construct actually runs.
-  Nothing in this project's existing scripts obviously uses one, so the
-  counter would read 0 either way and prove nothing — the post-migration
-  workload deliberately runs one known-deprecated construct (old-style
-  `*=` outer join syntax) so the counter has something real to report.
+  Attempted to exercise this with the classic `*=` old-style outer join —
+  and hit `Msg 102, Incorrect syntax near '*='`, a **parser-level syntax
+  error**, not the semantic "not allowed at this compatibility level" error
+  (`Msg 4147`) expected going in. SQL Server 2022 has fully removed the
+  `*=`/`=*` grammar, not just deprecated it — the parser doesn't recognize
+  it as valid SQL at all anymore, at any compatibility level. The counter
+  mechanism itself is real and would catch a construct that's deprecated
+  but still parseable; this particular textbook example turned out to be
+  too old to even reach that stage. Genuinely useful finding on its own:
+  deprecated features have a lifecycle, and far enough behind, some of what
+  used to be merely flagged has been deleted from the language entirely —
+  surfacing as a hard migration-time syntax break rather than a subtle
+  behavior change.
 
 ## Capstone validation
 
@@ -188,6 +203,10 @@ curriculum built, this is what catches it — not just "row counts match."
 
 ## Status
 
-🚧 In progress — all three engines' data migration confirmed complete with
-real row-count verification (see table above). `deprecated_probes.py` and
-`capstone_validate.py` now built, not yet run against any container.
+✅ Complete — all three engines' data migration verified (row-count exact
+match, ~29M rows), capstone validation confirmed clean against modules 1–4
+on all three engines, and all six breaking/deprecated-behavior probes run
+with real, verified results (two of which — the Postgres schema-ACL finding
+and the SQL Server removed-grammar finding — turned out meaningfully
+different from what was assumed going in). Module 5, and the full
+curriculum, complete.
