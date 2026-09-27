@@ -13,4 +13,4 @@ Then Phase 2 (indexing):
 Then Phase 3 (schema drift):
 - `introduce_schema_drift.sql` (per engine)
 
-Empty for now — nothing to corrupt until Phase 0's clean baseline exists and is verified.
+Empty for now: nothing to corrupt until Phase 0's clean baseline exists and is verified.

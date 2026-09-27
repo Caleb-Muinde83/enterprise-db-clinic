@@ -1,53 +1,59 @@
 # enterprise-db-clinic
 
 A hands-on lab that inherits, breaks, diagnoses, and fixes the database problems real
-enterprises live with — unpartitioned tables, bad indexing, schema drift, zero-downtime
-cutovers, and deprecated version migrations — built and benchmarked across **PostgreSQL**,
+enterprises deal with live: unpartitioned tables, bad indexing, schema drift, zero-downtime
+cutovers, and deprecated version migrations. It is built and benchmarked across **PostgreSQL**,
 **MySQL**, and **SQL Server**, with **Oracle** and **MongoDB** covered as comparison studies.
 
 Full curriculum and module specs: [`docs/curriculum.md`](docs/curriculum.md)
 
 ## Phase order
 
-| Phase | Module | Status |
-|---|---|---|
-| 0 | Foundation — dataset + environments | ✅ complete |
-| 1 | [Unpartitioned tables at scale](partitioning/README.md) | ✅ complete |
-| 2 | [Missing / incorrect indexing](indexing/README.md) | ✅ complete |
-| 3 | [Schema drift / normalization debt](schema-drift/README.md) | ✅ complete |
-| 4 | [Zero-downtime migration](zero-downtime/README.md) | ✅ complete |
-| 5 | [Deprecated version migration](version-migration/README.md) (run last) | ✅ complete |
-| 6 | Cross-engine comparison (Oracle, MongoDB) | ⏳ not started |
+| Phase | Module |
+|---|---|
+| 0 | Foundation dataset + environments |
+| 1 | [Unpartitioned tables at scale](partitioning/README.md) |
+| 2 | [Missing / incorrect indexing](indexing/README.md) |
+| 3 | [Schema drift / normalization debt](schema-drift/README.md) |
+| 4 | [Zero-downtime migration](zero-downtime/README.md) |
+| 5 | [Deprecated version migration](version-migration/README.md) (run last) |
+| 6 | [Cross-engine comparison](cross-engine-comparison/README.md) |
 
-Version migration runs last on purpose — it has to migrate a schema that already carries
-every other fix, not a clean baseline.
+Version migration runs last on purpose: it has to migrate a schema that already carries every
+other fix, not a clean baseline.
 
 ## Domain
 
 An e-commerce/fintech hybrid: `customers`, `products`, `orders`, `order_items`, `payments`,
-and a large time-ordered `events` table (clickstream/audit log) — the table every module's
-problems center on. Target scale: ~10-20M rows in `events`.
+and a large time-ordered `events` table (clickstream/audit log) at the center of nearly every
+module's problems. Target scale: ~10-20M rows in `events`.
 
 ## Repo layout
 
 ```
-environments/       docker-compose files per engine (old-version + new-version containers)
-seed/                dataset generator + per-engine schema DDL + bulk-load scripts
-corruption/          scripts that deliberately re-introduce each module's problem
-docs/                curriculum spec and per-phase write-ups
-data/                generated CSVs (gitignored — regenerate locally, don't commit)
+environments/          docker-compose files per engine (old-version + new-version containers)
+seed/                   dataset generator + per-engine schema DDL + bulk-load scripts
+corruption/             scripts that deliberately re-introduce each module's problem
+docs/                   curriculum, intro draft, and handbook draft
+data/                   generated CSVs (gitignored; regenerate locally, don't commit)
+indexing/               indexing scripts, results, and write-up
+partitioning/           partitioning scripts, results, and write-up
+schema-drift/            schema-drift scripts and write-up
+zero-downtime/           live migration scripts and write-up
+version-migration/       version migration scripts and results
+cross-engine-comparison/ Oracle and MongoDB research write-up
 ```
 
 ## Getting started (Phase 0)
 
-These commands run schema/load steps **through the container itself** — you don't need
+These commands run schema and load steps **through the container itself**, so you don't need
 `psql`, `mysql`, or `sqlcmd` installed on your host machine. They also don't depend on
 `make`, since it isn't available by default in Git Bash on Windows.
 
 ```bash
 # 1. Bring up an engine's old-version container (example: Postgres)
-# --wait blocks until the healthcheck passes, not just until the container exists —
-# important for MySQL and SQL Server, whose first-ever startup takes 20-40s.
+# --wait blocks until the healthcheck passes, not just until the container exists.
+# This is important for MySQL and SQL Server, whose first-ever startup takes 20-40s.
 cd environments/postgres && docker compose up -d --wait postgres_old && cd ../..
 
 # 2. Install generator dependencies
@@ -73,18 +79,18 @@ cd seed && python load/load_mysql.py --data-dir ../data --host localhost --port 
 
 # SQL Server
 cd environments/sqlserver && docker compose up -d --wait sqlserver_old && cd ../..
-# MSYS_NO_PATHCONV=1 stops Git Bash on Windows from mangling the /opt/... path below —
-# harmless to include on macOS/Linux too.
+# MSYS_NO_PATHCONV=1 stops Git Bash on Windows from mangling the /opt/... path below.
+# It is harmless to include on macOS/Linux too.
 MSYS_NO_PATHCONV=1 docker exec -i clinic_mssql_old /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Clinic!2017' < seed/schema/sqlserver_schema.sql
 cd seed && python load/load_sqlserver.py --password 'Clinic!2017' && cd ..
 ```
-(Don't pass `--container-data-dir` explicitly on Git Bash — typing a leading-slash path
+(Don't pass `--container-data-dir` explicitly on Git Bash: typing a leading-slash path
 directly at the prompt triggers the same MSYS mangling as before. The script already
 defaults to `/data`, which matches the docker-compose volume mount.)
 
 If you have `make` available (macOS/Linux, or Windows with it installed separately), the
-`Makefile` wraps the container-up and schema-apply steps as shortcuts — but it's optional,
+`Makefile` wraps the container-up and schema-apply steps as shortcuts, but it is optional,
 not required.
 
 See `seed/generate_data.py --help` for scale options (`small` / `medium` / `full`).
-`full` targets the ~10-20M row scale — expect it to take a while and to need real disk space.
+`full` targets the ~10-20M row scale. Expect it to take a while and to need real disk space.
